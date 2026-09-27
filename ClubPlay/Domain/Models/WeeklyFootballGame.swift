@@ -11,6 +11,8 @@ import Foundation
 struct WeeklyFootballGame: Identifiable, Codable, Equatable {
     let id: UUID
 
+    let communityID: UUID
+
     var gameName: String
     var venueName: String
 

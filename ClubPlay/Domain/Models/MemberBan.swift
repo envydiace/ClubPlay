@@ -11,6 +11,7 @@ import Foundation
 struct MemberBan: Identifiable, Codable, Equatable {
     let id: UUID
 
+    let communityID: UUID
     let memberID: UUID
     let sourceGameID: UUID
 

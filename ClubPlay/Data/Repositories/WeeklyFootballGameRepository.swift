@@ -9,7 +9,9 @@
 import Foundation
 
 protocol WeeklyFootballGameRepository {
-    func fetchUpcomingGames() async throws -> [WeeklyFootballGame]
+    func fetchUpcomingGames(
+        communityID: UUID
+    ) async throws -> [WeeklyFootballGame]
     func fetchGame(id: UUID) async throws -> WeeklyFootballGame?
     
     func createGame(_ game: WeeklyFootballGame) async throws
