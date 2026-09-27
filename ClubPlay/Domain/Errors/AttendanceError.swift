@@ -10,6 +10,7 @@ import Foundation
 
 enum AttendanceError: Error, Equatable {
     case unauthorised
+    case attendanceNotOpen
     case registrationNotConfirmed
-    case gameNotFinished
+    case gameCancelled
 }
