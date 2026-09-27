@@ -17,4 +17,5 @@ enum RegistrationError: Error, Equatable {
     case cancellationDeadlinePassed
     case gameCancelled
     case noWaitlistedPlayer
+    case invalidStatusChange
 }

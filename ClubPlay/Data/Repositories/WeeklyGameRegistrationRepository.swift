@@ -10,6 +10,10 @@ import Foundation
 
 protocol WeeklyGameRegistrationRepository {
     func fetchRegistration(
+        id: UUID
+    ) async throws -> WeeklyGameRegistration?
+    
+    func fetchRegistration(
         memberID: UUID,
         gameID: UUID
     ) async throws -> WeeklyGameRegistration?
