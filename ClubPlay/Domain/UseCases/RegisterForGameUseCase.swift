@@ -11,16 +11,13 @@ import Foundation
 struct RegisterForGameUseCase {
     private let gameRepository: WeeklyFootballGameRepository
     private let registrationRepository: WeeklyGameRegistrationRepository
-    private let banRepository: MemberBanRepository
 
     init(
         gameRepository: WeeklyFootballGameRepository,
-        registrationRepository: WeeklyGameRegistrationRepository,
-        banRepository: MemberBanRepository
+        registrationRepository: WeeklyGameRegistrationRepository
     ) {
         self.gameRepository = gameRepository
         self.registrationRepository = registrationRepository
-        self.banRepository = banRepository
     }
 
     func execute(
@@ -39,13 +36,6 @@ struct RegisterForGameUseCase {
             }
 
             throw RegistrationError.registrationNotOpen
-        }
-
-        if let activeBan = try await banRepository.fetchActiveBan(
-            forMemberID: memberID,
-            at: currentDate
-        ) {
-            throw RegistrationError.memberBanned(until: activeBan.endsAt)
         }
 
         guard currentDate >= game.registrationOpensAt else {

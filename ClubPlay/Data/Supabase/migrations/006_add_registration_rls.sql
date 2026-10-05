@@ -1,15 +1,7 @@
 alter table public.weekly_game_registrations
 enable row level security;
 
-create policy "Members can read own registrations"
-on public.weekly_game_registrations
-for select
-to authenticated
-using (
-    member_id = auth.uid()
-);
-
-create policy "Community organisers can read game registrations"
+create policy "Community members can read game registrations"
 on public.weekly_game_registrations
 for select
 to authenticated
@@ -21,7 +13,6 @@ using (
           on cm.community_id = g.community_id
         where g.id = weekly_game_registrations.game_id
           and cm.member_id = auth.uid()
-          and cm.role = 'organiser'
     )
 );
 

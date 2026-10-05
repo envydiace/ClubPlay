@@ -38,55 +38,54 @@ struct AuthView: View {
                         Text(community.name)
                         Text(membership.role.rawValue.capitalized)
                         
-                        if let member = viewModel.currentMember,
-                           viewModel.currentMembership?.role == .organiser {
+                        if let member = viewModel.currentMember {
 
                             let gameRepository = SupabaseWeeklyFootballGameRepository()
                             let membershipRepository = SupabaseCommunityMembershipRepository()
 
-                            NavigationLink("Create Game") {
-                                CreateGameView(
-                                    viewModel: CreateGameViewModel(
-                                        createGameUseCase: CreateGameUseCase(
-                                            gameRepository: gameRepository,
-                                            membershipRepository: membershipRepository
-                                        )
-                                    ),
-                                    communityID: community.id,
-                                    organiserID: member.id
-                                )
-                            }
-                            
-                            NavigationLink("Manage Games") {
-                                let gameRepository =
-                                    SupabaseWeeklyFootballGameRepository()
+                            if viewModel.currentMembership?.role == .organiser {
+                                NavigationLink("Create Game") {
+                                    CreateGameView(
+                                        viewModel: CreateGameViewModel(
+                                            createGameUseCase: CreateGameUseCase(
+                                                gameRepository: gameRepository,
+                                                membershipRepository: membershipRepository
+                                            )
+                                        ),
+                                        communityID: community.id,
+                                        organiserID: member.id
+                                    )
+                                }
+                                
+                                NavigationLink("Manage Games") {
+                                    let gameRepository =
+                                        SupabaseWeeklyFootballGameRepository()
 
-                                ManageGamesView(
-                                    viewModel: ManageGamesViewModel(
-                                        gameRepository: gameRepository,
-                                        publishGameUseCase: PublishGameUseCase(
+                                    ManageGamesView(
+                                        viewModel: ManageGamesViewModel(
                                             gameRepository: gameRepository,
-                                            membershipRepository:
-                                                SupabaseCommunityMembershipRepository()
-                                        )
+                                            publishGameUseCase: PublishGameUseCase(
+                                                gameRepository: gameRepository,
+                                                membershipRepository:
+                                                    SupabaseCommunityMembershipRepository()
+                                            )
+                                        ),
+                                        communityID: community.id,
+                                        organiserID: member.id
+                                    )
+                                }
+                            }
+                            NavigationLink("Upcoming Games") {
+                                UpcomingGamesView(
+                                    viewModel: UpcomingGamesViewModel(
+                                        gameRepository: SupabaseWeeklyFootballGameRepository()
                                     ),
                                     communityID: community.id,
-                                    organiserID: member.id
+                                    memberID: member.id
                                 )
                             }
-                        }
-                        
-                        NavigationLink("Upcoming Games") {
-                            UpcomingGamesView(
-                                viewModel: UpcomingGamesViewModel(
-                                    gameRepository: SupabaseWeeklyFootballGameRepository()
-                                ),
-                                communityID: community.id
-                            )
                         }
                     }
-                    
-                    
                 }
 
                 if let errorMessage = viewModel.errorMessage {

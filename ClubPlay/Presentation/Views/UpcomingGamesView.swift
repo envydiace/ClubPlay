@@ -12,6 +12,7 @@ struct UpcomingGamesView: View {
     @StateObject var viewModel: UpcomingGamesViewModel
 
     let communityID: UUID
+    let memberID: UUID
 
     var body: some View {
         List {
@@ -25,23 +26,40 @@ struct UpcomingGamesView: View {
             }
 
             ForEach(viewModel.games) { game in
-                VStack(alignment: .leading, spacing: 6) {
-                    Text(game.gameName)
-                        .font(.headline)
+                NavigationLink {
+                    GameDetailView(
+                        game: game,
+                        memberID: memberID,
+                        viewModel: GameDetailViewModel(
+                            registerForGameUseCase: RegisterForGameUseCase(
+                                gameRepository:
+                                    SupabaseWeeklyFootballGameRepository(),
 
-                    Text(game.venueName)
+                                registrationRepository:
+                                    SupabaseWeeklyGameRegistrationRepository(),
 
-                    Text(
-                        game.kickOffAt.formatted(
-                            date: .abbreviated,
-                            time: .shortened
+                            )
                         )
                     )
-                    .foregroundStyle(.secondary)
+                } label: {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(game.gameName)
+                            .font(.headline)
 
-                    Text("Capacity: \(game.playerCapacity)")
-                        .font(.caption)
+                        Text(game.venueName)
+
+                        Text(
+                            game.kickOffAt.formatted(
+                                date: .abbreviated,
+                                time: .shortened
+                            )
+                        )
                         .foregroundStyle(.secondary)
+
+                        Text("Capacity: \(game.playerCapacity)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
         }
