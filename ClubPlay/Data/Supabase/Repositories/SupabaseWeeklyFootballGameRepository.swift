@@ -46,6 +46,21 @@ final class SupabaseWeeklyFootballGameRepository:
 
         return rows.first?.toDomain()
     }
+    
+    func fetchGames(
+        communityID: UUID
+    ) async throws -> [WeeklyFootballGame] {
+
+        let rows: [WeeklyFootballGameRow] = try await client
+            .from("weekly_football_games")
+            .select()
+            .eq("community_id", value: communityID.uuidString)
+            .order("kick_off_at", ascending: true)
+            .execute()
+            .value
+
+        return rows.map { $0.toDomain() }
+    }
 
     func createGame(_ game: WeeklyFootballGame) async throws {
         let row = WeeklyFootballGameRow.fromDomain(game)

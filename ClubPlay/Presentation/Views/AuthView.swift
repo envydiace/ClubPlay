@@ -56,8 +56,37 @@ struct AuthView: View {
                                     organiserID: member.id
                                 )
                             }
+                            
+                            NavigationLink("Manage Games") {
+                                let gameRepository =
+                                    SupabaseWeeklyFootballGameRepository()
+
+                                ManageGamesView(
+                                    viewModel: ManageGamesViewModel(
+                                        gameRepository: gameRepository,
+                                        publishGameUseCase: PublishGameUseCase(
+                                            gameRepository: gameRepository,
+                                            membershipRepository:
+                                                SupabaseCommunityMembershipRepository()
+                                        )
+                                    ),
+                                    communityID: community.id,
+                                    organiserID: member.id
+                                )
+                            }
+                        }
+                        
+                        NavigationLink("Upcoming Games") {
+                            UpcomingGamesView(
+                                viewModel: UpcomingGamesViewModel(
+                                    gameRepository: SupabaseWeeklyFootballGameRepository()
+                                ),
+                                communityID: community.id
+                            )
                         }
                     }
+                    
+                    
                 }
 
                 if let errorMessage = viewModel.errorMessage {

@@ -13,6 +13,9 @@ protocol WeeklyFootballGameRepository {
         communityID: UUID
     ) async throws -> [WeeklyFootballGame]
     func fetchGame(id: UUID) async throws -> WeeklyFootballGame?
+    func fetchGames(
+        communityID: UUID
+    ) async throws -> [WeeklyFootballGame]
     
     func createGame(_ game: WeeklyFootballGame) async throws
     func updateGame(_ game: WeeklyFootballGame) async throws
