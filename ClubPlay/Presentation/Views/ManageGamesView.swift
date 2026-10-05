@@ -42,6 +42,25 @@ struct ManageGamesView: View {
                             }
                         }
                     }
+                    
+                    if game.status == .draft || game.status == .published {
+                        NavigationLink("Edit") {
+                            let gameRepository =
+                                SupabaseWeeklyFootballGameRepository()
+
+                            EditGameView(
+                                viewModel: EditGameViewModel(
+                                    game: game,
+                                    editGameUseCase: EditGameUseCase(
+                                        gameRepository: gameRepository,
+                                        membershipRepository:
+                                            SupabaseCommunityMembershipRepository()
+                                    )
+                                ),
+                                organiserID: organiserID
+                            )
+                        }
+                    }
                 }
             }
         }
