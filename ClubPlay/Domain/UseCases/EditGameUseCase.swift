@@ -11,13 +11,19 @@ import Foundation
 struct EditGameUseCase {
     private let gameRepository: WeeklyFootballGameRepository
     private let membershipRepository: CommunityMembershipRepository
+    private let registrationRepository: WeeklyGameRegistrationRepository
+    private let notificationRepository: NotificationRepository
 
     init(
         gameRepository: WeeklyFootballGameRepository,
-        membershipRepository: CommunityMembershipRepository
+        membershipRepository: CommunityMembershipRepository,
+        registrationRepository: WeeklyGameRegistrationRepository,
+        notificationRepository: NotificationRepository
     ) {
         self.gameRepository = gameRepository
         self.membershipRepository = membershipRepository
+        self.registrationRepository = registrationRepository
+        self.notificationRepository = notificationRepository
     }
 
     func execute(
@@ -58,7 +64,39 @@ struct EditGameUseCase {
         guard game.registrationClosesAt <= game.kickOffAt else {
             throw GameManagementError.invalidRegistrationWindow
         }
+        
+        guard let existingGame =
+                try await gameRepository.fetchGame(id: game.id)
+        else {
+            throw GameManagementError.gameNotFound
+        }
 
         try await gameRepository.updateGame(game)
+        
+        if existingGame.status == .published {
+            let registrations =
+                try await registrationRepository.fetchRegistrations(
+                    forGameID: game.id
+                )
+
+            let recipientIDs = registrations
+                .filter {
+                    $0.registrationStatus == .confirmed ||
+                    $0.registrationStatus == .waitlisted
+                }
+                .map(\.memberID)
+
+            if !recipientIDs.isEmpty {
+                let notification = ClubNotification(
+                    recipientMemberIDs: recipientIDs,
+                    type: .gameUpdated,
+                    title: "Game Updated",
+                    message: "\(game.gameName) has been updated.",
+                    relatedGameID: game.id
+                )
+
+                try await notificationRepository.send(notification)
+            }
+        }
     }
 }

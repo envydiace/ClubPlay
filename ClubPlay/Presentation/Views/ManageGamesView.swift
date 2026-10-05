@@ -54,7 +54,12 @@ struct ManageGamesView: View {
                                     editGameUseCase: EditGameUseCase(
                                         gameRepository: gameRepository,
                                         membershipRepository:
-                                            SupabaseCommunityMembershipRepository()
+                                            SupabaseCommunityMembershipRepository(),
+                                        registrationRepository:
+                                            SupabaseWeeklyGameRegistrationRepository(),
+
+                                        notificationRepository:
+                                            NoOpNotificationRepository()
                                     )
                                 ),
                                 organiserID: organiserID
