@@ -11,7 +11,21 @@ import SwiftUI
 struct ClubPlayApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            let authRepository = SupabaseAuthRepository()
+
+            AuthView(
+                viewModel: AuthViewModel(
+                    signUpUseCase: SignUpUseCase(
+                        authRepository: authRepository
+                    ),
+                    signInUseCase: SignInUseCase(
+                        authRepository: authRepository
+                    ),
+                    signOutUseCase: SignOutUseCase(
+                        authRepository: authRepository
+                    )
+                )
+            )
         }
     }
 }
