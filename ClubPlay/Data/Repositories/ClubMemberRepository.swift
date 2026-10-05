@@ -10,6 +10,4 @@ import Foundation
 
 protocol ClubMemberRepository {
     func fetchMember(id: UUID) async throws -> ClubMember?
-    func fetchMember(cloudUserRecordName: String) async throws -> ClubMember?
-    func saveMember(_ member: ClubMember) async throws
 }

@@ -18,19 +18,25 @@ final class AuthViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var currentUserID: UUID?
+    
+    @Published var currentMember: ClubMember?
 
     private let signUpUseCase: SignUpUseCase
     private let signInUseCase: SignInUseCase
     private let signOutUseCase: SignOutUseCase
 
+    private let memberRepository: ClubMemberRepository
+    
     init(
         signUpUseCase: SignUpUseCase,
         signInUseCase: SignInUseCase,
-        signOutUseCase: SignOutUseCase
+        signOutUseCase: SignOutUseCase,
+        memberRepository: ClubMemberRepository
     ) {
         self.signUpUseCase = signUpUseCase
         self.signInUseCase = signInUseCase
         self.signOutUseCase = signOutUseCase
+        self.memberRepository = memberRepository
     }
 
     func signUp() async {
@@ -57,10 +63,13 @@ final class AuthViewModel: ObservableObject {
         defer { isLoading = false }
 
         do {
-            currentUserID = try await signInUseCase.execute(
+            let userID = try await signInUseCase.execute(
                 email: email,
                 password: password
             )
+
+            currentUserID = userID
+            currentMember = try await memberRepository.fetchMember(id: userID)
         } catch {
             errorMessage = error.localizedDescription
         }

@@ -12,6 +12,7 @@ struct ClubPlayApp: App {
     var body: some Scene {
         WindowGroup {
             let authRepository = SupabaseAuthRepository()
+            let memberRepository = SupabaseClubMemberRepository()
 
             AuthView(
                 viewModel: AuthViewModel(
@@ -23,7 +24,8 @@ struct ClubPlayApp: App {
                     ),
                     signOutUseCase: SignOutUseCase(
                         authRepository: authRepository
-                    )
+                    ),
+                    memberRepository: memberRepository
                 )
             )
         }

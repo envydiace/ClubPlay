@@ -23,6 +23,13 @@ struct AuthView: View {
 
                     SecureField("Password", text: $viewModel.password)
                 }
+                
+                if let member = viewModel.currentMember {
+                    Section("Profile") {
+                        Text(member.fullName)
+                        Text(member.emailAddress)
+                    }
+                }
 
                 if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
