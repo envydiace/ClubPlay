@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5794D7B03073880B00C3705E /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 5794D7AF3073880B00C3705E /* Auth */; };
+		5794D7B23073880B00C3705E /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 5794D7B13073880B00C3705E /* PostgREST */; };
+		5794D7B43073880B00C3705E /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 5794D7B33073880B00C3705E /* Realtime */; };
+		5794D7BA3073893700C3705E /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 5794D7B93073893700C3705E /* Supabase */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		57D995973068C29300CC7C16 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +59,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5794D7BA3073893700C3705E /* Supabase in Frameworks */,
+				5794D7B43073880B00C3705E /* Realtime in Frameworks */,
+				5794D7B23073880B00C3705E /* PostgREST in Frameworks */,
+				5794D7B03073880B00C3705E /* Auth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +83,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5794D7B83073893700C3705E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		57D995803068C29100CC7C16 = {
 			isa = PBXGroup;
 			children = (
 				57D9958B3068C29100CC7C16 /* ClubPlay */,
 				57D995993068C29300CC7C16 /* ClubPlayTests */,
 				57D995A33068C29300CC7C16 /* ClubPlayUITests */,
+				5794D7B83073893700C3705E /* Frameworks */,
 				57D9958A3068C29100CC7C16 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +131,10 @@
 			);
 			name = ClubPlay;
 			packageProductDependencies = (
+				5794D7AF3073880B00C3705E /* Auth */,
+				5794D7B13073880B00C3705E /* PostgREST */,
+				5794D7B33073880B00C3705E /* Realtime */,
+				5794D7B93073893700C3705E /* Supabase */,
 			);
 			productName = ClubPlay;
 			productReference = 57D995893068C29100CC7C16 /* ClubPlay.app */;
@@ -195,6 +218,9 @@
 			);
 			mainGroup = 57D995803068C29100CC7C16;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5794D7AE3073880B00C3705E /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 57D9958A3068C29100CC7C16 /* Products */;
 			projectDirPath = "";
@@ -578,6 +604,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5794D7AE3073880B00C3705E /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5794D7AF3073880B00C3705E /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5794D7AE3073880B00C3705E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		5794D7B13073880B00C3705E /* PostgREST */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5794D7AE3073880B00C3705E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = PostgREST;
+		};
+		5794D7B33073880B00C3705E /* Realtime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5794D7AE3073880B00C3705E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Realtime;
+		};
+		5794D7B93073893700C3705E /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5794D7AE3073880B00C3705E /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 57D995813068C29100CC7C16 /* Project object */;
 }
