@@ -79,6 +79,25 @@ final class SupabaseWeeklyGameRegistrationRepository:
 
         return rows.map { $0.toDomain() }
     }
+    
+    func promoteNextWaitlistedPlayer(
+        gameID: UUID
+    ) async throws -> UUID? {
+
+        struct Params: Encodable {
+            let p_game_id: UUID
+        }
+
+        let result: UUID? = try await client
+            .rpc(
+                "promote_next_waitlisted_player",
+                params: Params(p_game_id: gameID)
+            )
+            .execute()
+            .value
+
+        return result
+    }
 
     func saveRegistration(
         _ registration: WeeklyGameRegistration

@@ -17,12 +17,32 @@ final class GameDetailViewModel: ObservableObject {
     @Published var successMessage: String?
 
     private let registerForGameUseCase: RegisterForGameUseCase
+    private let cancelGameRegistrationUseCase: CancelGameRegistrationUseCase
+    private let registrationRepository: WeeklyGameRegistrationRepository
 
     init(
-        registerForGameUseCase: RegisterForGameUseCase
-    ) {
-        self.registerForGameUseCase = registerForGameUseCase
-    }
+            registerForGameUseCase: RegisterForGameUseCase,
+            cancelGameRegistrationUseCase: CancelGameRegistrationUseCase,
+            registrationRepository: WeeklyGameRegistrationRepository
+        ) {
+            self.registerForGameUseCase = registerForGameUseCase
+            self.cancelGameRegistrationUseCase = cancelGameRegistrationUseCase
+            self.registrationRepository = registrationRepository
+        }
+    
+    func loadRegistration(
+            memberID: UUID,
+            gameID: UUID
+        ) async {
+            do {
+                registration = try await registrationRepository.fetchRegistration(
+                    memberID: memberID,
+                    gameID: gameID
+                )
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
 
     func register(
         memberID: UUID,
@@ -52,6 +72,30 @@ final class GameDetailViewModel: ObservableObject {
             case .cancelled:
                 successMessage = nil
             }
+
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+    
+    func cancel(
+        memberID: UUID,
+        gameID: UUID
+    ) async {
+        isLoading = true
+        errorMessage = nil
+        successMessage = nil
+
+        defer { isLoading = false }
+
+        do {
+            let result = try await cancelGameRegistrationUseCase.execute(
+                memberID: memberID,
+                gameID: gameID
+            )
+
+            registration = result
+            successMessage = "Registration cancelled."
 
         } catch {
             errorMessage = error.localizedDescription

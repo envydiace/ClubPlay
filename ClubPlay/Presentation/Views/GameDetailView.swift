@@ -72,16 +72,40 @@ struct GameDetailView: View {
                     .foregroundStyle(.red)
             }
 
-            Button("Register for Game") {
-                Task {
-                    await viewModel.register(
-                        memberID: memberID,
-                        gameID: game.id
-                    )
+            
+            if viewModel.registration == nil ||
+               viewModel.registration?.registrationStatus == .cancelled {
+
+                Button("Register for Game") {
+                    Task {
+                        await viewModel.register(
+                            memberID: memberID,
+                            gameID: game.id
+                        )
+                    }
+                }
+                .disabled(viewModel.isLoading)
+            }
+            
+            if let registration = viewModel.registration,
+               registration.registrationStatus != .cancelled {
+
+                Button("Cancel Registration", role: .destructive) {
+                    Task {
+                        await viewModel.cancel(
+                            memberID: memberID,
+                            gameID: game.id
+                        )
+                    }
                 }
             }
-            .disabled(viewModel.isLoading)
         }
         .navigationTitle("Game Details")
+        .task {
+            await viewModel.loadRegistration(
+                memberID: memberID,
+                gameID: game.id
+            )
+        }
     }
 }

@@ -27,18 +27,40 @@ struct UpcomingGamesView: View {
 
             ForEach(viewModel.games) { game in
                 NavigationLink {
+                    let gameRepository =
+                            SupabaseWeeklyFootballGameRepository()
+
+                        let registrationRepository =
+                            SupabaseWeeklyGameRegistrationRepository()
+
+                        let promoteUseCase =
+                            PromoteWaitlistedPlayerUseCase(
+                                registrationRepository: registrationRepository
+                            )
+
+                        let cancelUseCase =
+                            CancelGameRegistrationUseCase(
+                                gameRepository: gameRepository,
+                                registrationRepository: registrationRepository,
+                                promoteWaitlistedPlayerUseCase: promoteUseCase
+                            )
+
+                        let registerUseCase =
+                            RegisterForGameUseCase(
+                                gameRepository: gameRepository,
+                                registrationRepository: registrationRepository
+                            )
+                    
                     GameDetailView(
                         game: game,
                         memberID: memberID,
                         viewModel: GameDetailViewModel(
                             registerForGameUseCase: RegisterForGameUseCase(
-                                gameRepository:
-                                    SupabaseWeeklyFootballGameRepository(),
-
-                                registrationRepository:
-                                    SupabaseWeeklyGameRegistrationRepository(),
-
-                            )
+                                gameRepository: gameRepository,
+                                registrationRepository: registrationRepository
+                            ),
+                            cancelGameRegistrationUseCase: cancelUseCase,
+                            registrationRepository: registrationRepository
                         )
                     )
                 } label: {

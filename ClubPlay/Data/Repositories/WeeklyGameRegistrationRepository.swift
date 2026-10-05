@@ -25,6 +25,10 @@ protocol WeeklyGameRegistrationRepository {
     func fetchRegistrations(
         forMemberID memberID: UUID
     ) async throws -> [WeeklyGameRegistration]
+    
+    func promoteNextWaitlistedPlayer(
+        gameID: UUID
+    ) async throws -> UUID?
 
     func saveRegistration(
         _ registration: WeeklyGameRegistration

@@ -73,8 +73,7 @@ struct CancelGameRegistrationUseCase {
 
         if previousStatus == .confirmed {
             _ = try? await promoteWaitlistedPlayerUseCase.execute(
-                gameID: gameID,
-                currentDate: currentDate
+                gameID: gameID
             )
         }
 
