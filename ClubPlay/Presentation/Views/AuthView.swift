@@ -37,6 +37,26 @@ struct AuthView: View {
                     Section("Community") {
                         Text(community.name)
                         Text(membership.role.rawValue.capitalized)
+                        
+                        if let member = viewModel.currentMember,
+                           viewModel.currentMembership?.role == .organiser {
+
+                            let gameRepository = SupabaseWeeklyFootballGameRepository()
+                            let membershipRepository = SupabaseCommunityMembershipRepository()
+
+                            NavigationLink("Create Game") {
+                                CreateGameView(
+                                    viewModel: CreateGameViewModel(
+                                        createGameUseCase: CreateGameUseCase(
+                                            gameRepository: gameRepository,
+                                            membershipRepository: membershipRepository
+                                        )
+                                    ),
+                                    communityID: community.id,
+                                    organiserID: member.id
+                                )
+                            }
+                        }
                     }
                 }
 
