@@ -13,6 +13,9 @@ struct ClubPlayApp: App {
         WindowGroup {
             let authRepository = SupabaseAuthRepository()
             let memberRepository = SupabaseClubMemberRepository()
+            let membershipRepository = SupabaseCommunityMembershipRepository()
+            let communityRepository = SupabaseCommunityRepository()
+            
 
             AuthView(
                 viewModel: AuthViewModel(
@@ -25,7 +28,9 @@ struct ClubPlayApp: App {
                     signOutUseCase: SignOutUseCase(
                         authRepository: authRepository
                     ),
-                    memberRepository: memberRepository
+                    memberRepository: memberRepository,
+                    membershipRepository: membershipRepository,
+                    communityRepository: communityRepository
                 )
             )
         }

@@ -17,6 +17,10 @@ protocol CommunityMembershipRepository {
     func fetchMemberships(
         forCommunityID communityID: UUID
     ) async throws -> [CommunityMembership]
+    
+    func fetchMemberships(
+        forMemberID memberID: UUID
+    ) async throws -> [CommunityMembership]
 
     func createMembership(
         _ membership: CommunityMembership

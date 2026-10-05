@@ -30,6 +30,15 @@ struct AuthView: View {
                         Text(member.emailAddress)
                     }
                 }
+                
+                if let membership = viewModel.currentMembership,
+                   let community = viewModel.currentCommunity {
+
+                    Section("Community") {
+                        Text(community.name)
+                        Text(membership.role.rawValue.capitalized)
+                    }
+                }
 
                 if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
