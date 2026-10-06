@@ -16,10 +16,16 @@ enum CoreDataModelFactory {
 
         let cachedGame = makeCachedGameEntity()
         let cachedRegistration = makeCachedRegistrationEntity()
+        let cachedProfile = makeCachedProfileEntity()
+        let cachedCommunityMembership = makeCachedCommunityMembershipEntity()
+        let cachedCommunity = makeCachedCommunityEntity()
 
         model.entities = [
             cachedGame,
-            cachedRegistration
+            cachedRegistration,
+            cachedProfile,
+            cachedCommunityMembership,
+            cachedCommunity
         ]
 
         return model
@@ -153,6 +159,136 @@ enum CoreDataModelFactory {
             attribute(
                 name: "updatedAt",
                 type: .dateAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "lastSyncedAt",
+                type: .dateAttributeType,
+                optional: false
+            )
+        ]
+
+        entity.uniquenessConstraints = [
+            ["id"]
+        ]
+
+        return entity
+    }
+    
+    private static func makeCachedProfileEntity() -> NSEntityDescription {
+        let entity = NSEntityDescription()
+
+        entity.name = "CachedProfile"
+        entity.managedObjectClassName =
+            NSStringFromClass(CachedProfile.self)
+
+        entity.properties = [
+            attribute(
+                name: "id",
+                type: .UUIDAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "fullName",
+                type: .stringAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "emailAddress",
+                type: .stringAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "lastSyncedAt",
+                type: .dateAttributeType,
+                optional: false
+            )
+        ]
+
+        entity.uniquenessConstraints = [
+            ["id"]
+        ]
+
+        return entity
+    }
+    
+    private static func makeCachedCommunityMembershipEntity()
+        -> NSEntityDescription {
+
+        let entity = NSEntityDescription()
+
+        entity.name = "CachedCommunityMembership"
+        entity.managedObjectClassName =
+            NSStringFromClass(CachedCommunityMembership.self)
+
+        entity.properties = [
+            attribute(
+                name: "id",
+                type: .UUIDAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "memberID",
+                type: .UUIDAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "communityID",
+                type: .UUIDAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "role",
+                type: .stringAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "joinedAt",
+                type: .dateAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "lastSyncedAt",
+                type: .dateAttributeType,
+                optional: false
+            )
+        ]
+
+        entity.uniquenessConstraints = [
+            ["id"]
+        ]
+
+        return entity
+    }
+    
+    private static func makeCachedCommunityEntity()
+        -> NSEntityDescription {
+
+        let entity = NSEntityDescription()
+
+        entity.name = "CachedCommunity"
+        entity.managedObjectClassName =
+            NSStringFromClass(CachedCommunity.self)
+
+        entity.properties = [
+            attribute(
+                name: "id",
+                type: .UUIDAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "name",
+                type: .stringAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "createdAt",
+                type: .dateAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "createdByMemberID",
+                type: .UUIDAttributeType,
                 optional: false
             ),
             attribute(

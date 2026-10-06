@@ -10,65 +10,124 @@ import Foundation
 
 @MainActor
 final class AppDependencies {
-
     static let shared = AppDependencies()
 
     // MARK: - Remote repositories
 
-    let supabaseGameRepository: SupabaseWeeklyFootballGameRepository
-    let supabaseRegistrationRepository: SupabaseWeeklyGameRegistrationRepository
-    let membershipRepository: SupabaseCommunityMembershipRepository
-    let memberRepository: SupabaseClubMemberRepository
-    let communityRepository: SupabaseCommunityRepository
-    let authRepository: SupabaseAuthRepository
+    let supabaseMemberRepository:
+        SupabaseClubMemberRepository
 
-    // MARK: - Cache
+    let supabaseCommunityRepository:
+        SupabaseCommunityRepository
 
-    let gameCache: CoreDataGameCache
-    let registrationCache: CoreDataRegistrationCache
+    let supabaseMembershipRepository:
+        SupabaseCommunityMembershipRepository
+
+    let supabaseGameRepository:
+        SupabaseWeeklyFootballGameRepository
+
+    let supabaseRegistrationRepository:
+        SupabaseWeeklyGameRegistrationRepository
+
+    // MARK: - Core Data caches
+
+    let profileCache:
+        CoreDataProfileCache
+
+    let communityCache:
+        CoreDataCommunityCache
+
+    let membershipCache:
+        CoreDataCommunityMembershipCache
+
+    let gameCache:
+        CoreDataGameCache
+
+    let registrationCache:
+        CoreDataRegistrationCache
 
     // MARK: - App-facing repositories
 
-    let gameRepository: WeeklyFootballGameRepository
-    let registrationRepository: WeeklyGameRegistrationRepository
+    let memberRepository:
+        ClubMemberRepository
+
+    let communityRepository:
+        CommunityRepository
+
+    let membershipRepository:
+        CommunityMembershipRepository
+
+    let gameRepository:
+        WeeklyFootballGameRepository
+
+    let registrationRepository:
+        WeeklyGameRegistrationRepository
+
+    let authRepository:
+        AuthRepository
 
     private init() {
+        supabaseMemberRepository =
+            SupabaseClubMemberRepository()
 
-        // Supabase
+        supabaseCommunityRepository =
+            SupabaseCommunityRepository()
+
+        supabaseMembershipRepository =
+            SupabaseCommunityMembershipRepository()
+
         supabaseGameRepository =
             SupabaseWeeklyFootballGameRepository()
 
         supabaseRegistrationRepository =
             SupabaseWeeklyGameRegistrationRepository()
 
-        membershipRepository =
-            SupabaseCommunityMembershipRepository()
+        profileCache =
+            CoreDataProfileCache()
+
+        communityCache =
+            CoreDataCommunityCache()
+
+        membershipCache =
+            CoreDataCommunityMembershipCache()
+
+        gameCache =
+            CoreDataGameCache()
+
+        registrationCache =
+            CoreDataRegistrationCache()
 
         memberRepository =
-            SupabaseClubMemberRepository()
+            CachedClubMemberRepository(
+                remoteRepository: supabaseMemberRepository,
+                profileCache: profileCache
+            )
 
         communityRepository =
-            SupabaseCommunityRepository()
+            CachedCommunityRepository(
+                remoteRepository: supabaseCommunityRepository,
+                communityCache: communityCache
+            )
 
-        authRepository =
-            SupabaseAuthRepository()
+        membershipRepository =
+            CachedCommunityMembershipRepository(
+                remoteRepository: supabaseMembershipRepository,
+                membershipCache: membershipCache
+            )
 
-        // Core Data
-        gameCache = CoreDataGameCache()
-        
-        registrationCache = CoreDataRegistrationCache()
-
-        // Combined repository
         gameRepository =
             CachedWeeklyFootballGameRepository(
                 remoteRepository: supabaseGameRepository,
                 gameCache: gameCache
             )
-        
+
         registrationRepository =
             CachedWeeklyGameRegistrationRepository(
                 remoteRepository: supabaseRegistrationRepository,
                 registrationCache: registrationCache
             )
+
+        authRepository =
+            SupabaseAuthRepository()
     }
 }
