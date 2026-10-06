@@ -5,7 +5,6 @@
 //  Created by Đức Anh on 6/10/26.
 //
 
-
 import SwiftUI
 
 struct EditGameView: View {
@@ -14,74 +13,84 @@ struct EditGameView: View {
     let organiserID: UUID
 
     var body: some View {
-        Form {
-            Section("Game") {
-                TextField(
-                    "Game name",
-                    text: $viewModel.gameName
+        ScrollView {
+            VStack(spacing: 20) {
+                GameFormFields(
+                    gameName: $viewModel.gameName,
+                    venueName: $viewModel.venueName,
+                    kickOffAt: $viewModel.kickOffAt,
+                    finishesAt: $viewModel.finishesAt,
+                    playerCapacity: $viewModel.playerCapacity,
+                    registrationOpensAt:
+                        $viewModel.registrationOpensAt,
+                    registrationClosesAt:
+                        $viewModel.registrationClosesAt,
+                    cancellationDeadlineHours:
+                        $viewModel.cancellationDeadlineHours
                 )
 
-                TextField(
-                    "Venue",
-                    text: $viewModel.venueName
-                )
-
-                Stepper(
-                    "Capacity: \(viewModel.playerCapacity)",
-                    value: $viewModel.playerCapacity,
-                    in: 1...100
-                )
-            }
-
-            Section("Schedule") {
-                DatePicker(
-                    "Kick-off",
-                    selection: $viewModel.kickOffAt
-                )
-
-                DatePicker(
-                    "Finish",
-                    selection: $viewModel.finishesAt
-                )
-            }
-
-            Section("Registration") {
-                DatePicker(
-                    "Registration opens",
-                    selection: $viewModel.registrationOpensAt
-                )
-
-                DatePicker(
-                    "Registration closes",
-                    selection: $viewModel.registrationClosesAt
-                )
-
-                Stepper(
-                    "Cancel at least \(viewModel.cancellationDeadlineHours) hour(s) before",
-                    value: $viewModel.cancellationDeadlineHours,
-                    in: 0...24
-                )
-            }
-
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundStyle(.red)
-            }
-
-            if viewModel.didSave {
-                Text("Game updated.")
-                    .foregroundStyle(.green)
-            }
-
-            Button("Save Changes") {
-                Task {
-                    await viewModel.save(
-                        organiserID: organiserID
+                if let errorMessage = viewModel.errorMessage {
+                    messageView(
+                        errorMessage,
+                        color: .red,
+                        icon: "exclamationmark.triangle.fill"
                     )
                 }
+
+                if viewModel.didSave {
+                    messageView(
+                        "Game updated.",
+                        color: .green,
+                        icon: "checkmark.circle.fill"
+                    )
+                }
+
+                Button {
+                    Task {
+                        await viewModel.save(
+                            organiserID: organiserID
+                        )
+                    }
+                } label: {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Label(
+                            "Save Changes",
+                            systemImage: "checkmark.circle.fill"
+                        )
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(viewModel.isLoading)
             }
-            .disabled(viewModel.isLoading)
+            .padding()
         }
         .navigationTitle("Edit Game")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func messageView(
+        _ message: String,
+        color: Color,
+        icon: String
+    ) -> some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundStyle(color)
+
+            Text(message)
+                .font(.subheadline)
+
+            Spacer()
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(color.opacity(0.08))
+        )
     }
 }
