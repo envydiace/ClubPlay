@@ -17,19 +17,21 @@ final class GamePlayersViewModel: ObservableObject {
 
     private let registrationRepository: WeeklyGameRegistrationRepository
     private let memberRepository: ClubMemberRepository
+    private let changeRegistrationStatusUseCase: ChangeRegistrationStatusUseCase
 
     init(
         registrationRepository: WeeklyGameRegistrationRepository,
-        memberRepository: ClubMemberRepository
+        memberRepository: ClubMemberRepository,
+        changeRegistrationStatusUseCase: ChangeRegistrationStatusUseCase
     ) {
         self.registrationRepository = registrationRepository
         self.memberRepository = memberRepository
+        self.changeRegistrationStatusUseCase = changeRegistrationStatusUseCase
     }
 
     func loadPlayers(gameID: UUID) async {
         isLoading = true
         errorMessage = nil
-
         defer { isLoading = false }
 
         do {
@@ -58,7 +60,25 @@ final class GamePlayersViewModel: ObservableObject {
             }
 
             players = result
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
 
+    func changeStatus(
+        registrationID: UUID,
+        newStatus: RegistrationStatus,
+        organiserID: UUID,
+        gameID: UUID
+    ) async {
+        do {
+            _ = try await changeRegistrationStatusUseCase.execute(
+                registrationID: registrationID,
+                newStatus: newStatus,
+                requestingMemberID: organiserID
+            )
+
+            await loadPlayers(gameID: gameID)
         } catch {
             errorMessage = error.localizedDescription
         }

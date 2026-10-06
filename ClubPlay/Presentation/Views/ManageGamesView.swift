@@ -67,14 +67,28 @@ struct ManageGamesView: View {
                         }
                     }
                     NavigationLink("Players") {
+                        let registrationRepository =
+                            SupabaseWeeklyGameRegistrationRepository()
+
+                        let membershipRepository =
+                            SupabaseCommunityMembershipRepository()
+
+                        let gameRepository =
+                            SupabaseWeeklyFootballGameRepository()
+
                         GamePlayersView(
                             viewModel: GamePlayersViewModel(
-                                registrationRepository:
-                                    SupabaseWeeklyGameRegistrationRepository(),
-                                memberRepository:
-                                    SupabaseClubMemberRepository()
+                                registrationRepository: registrationRepository,
+                                memberRepository: SupabaseClubMemberRepository(),
+                                changeRegistrationStatusUseCase:
+                                    ChangeRegistrationStatusUseCase(
+                                        registrationRepository: registrationRepository,
+                                        membershipRepository: membershipRepository,
+                                        gameRepository: gameRepository
+                                    )
                             ),
-                            gameID: game.id
+                            gameID: game.id,
+                            organiserID: organiserID
                         )
                     }
                 }
