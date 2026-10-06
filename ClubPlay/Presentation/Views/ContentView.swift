@@ -57,7 +57,8 @@ struct ContentView: View {
                             )
                         ),
                         communityID: community.id,
-                        organiserID: member.id
+                        organiserID: member.id,
+                        dependencies: dependencies
                     )
                 }
                 .tabItem {
