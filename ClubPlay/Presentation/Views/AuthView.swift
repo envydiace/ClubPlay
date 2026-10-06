@@ -41,45 +41,42 @@ struct AuthView: View {
         ScrollView {
             VStack(spacing: 28) {
 
-                // MARK: - Header
-
-                VStack(spacing: 10) {
+                VStack(spacing: 12) {
                     Image(systemName: "sportscourt.fill")
-                        .font(.system(size: 54))
+                        .font(.system(size: 58))
                         .foregroundStyle(.blue)
 
                     Text("ClubPlay")
                         .font(.largeTitle)
                         .fontWeight(.bold)
 
-                    Text("Join games. Manage your club. Play together.")
+                    Text("Sign in to access your community games")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
-                .padding(.top, 40)
-
-                // MARK: - Account card
+                .padding(.top, 60)
 
                 VStack(alignment: .leading, spacing: 18) {
-                    Text("Account")
-                        .font(.headline)
+                    Text("Welcome Back")
+                        .font(.title3)
+                        .fontWeight(.semibold)
 
-                    VStack(spacing: 14) {
-                        TextField(
-                            "Email",
-                            text: $viewModel.email
-                        )
-                        .textInputAutocapitalization(.never)
-                        .keyboardType(.emailAddress)
-                        .textFieldStyle(.roundedBorder)
+                    TextField(
+                        "Email",
+                        text: $viewModel.email
+                    )
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.emailAddress)
+                    .textContentType(.emailAddress)
+                    .textFieldStyle(.roundedBorder)
 
-                        SecureField(
-                            "Password",
-                            text: $viewModel.password
-                        )
-                        .textFieldStyle(.roundedBorder)
-                    }
+                    SecureField(
+                        "Password",
+                        text: $viewModel.password
+                    )
+                    .textContentType(.password)
+                    .textFieldStyle(.roundedBorder)
                 }
                 .padding()
                 .background(
@@ -90,8 +87,6 @@ struct AuthView: View {
                             )
                         )
                 )
-
-                // MARK: - Error
 
                 if let errorMessage = viewModel.errorMessage {
                     HStack(spacing: 10) {
@@ -113,35 +108,32 @@ struct AuthView: View {
                     )
                 }
 
-                // MARK: - Actions
-
-                VStack(spacing: 12) {
-                    Button {
-                        Task {
-                            await viewModel.signIn()
-                        }
-                    } label: {
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .frame(maxWidth: .infinity)
-                        } else {
-                            Label(
-                                "Sign In",
-                                systemImage: "arrow.right.circle.fill"
-                            )
-                            .frame(maxWidth: .infinity)
-                        }
+                Button {
+                    Task {
+                        await viewModel.signIn()
                     }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    .disabled(viewModel.isLoading)
-                    .buttonStyle(.bordered)
-                    .controlSize(.large)
-                    .disabled(viewModel.isLoading)
+                } label: {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Label(
+                            "Sign In",
+                            systemImage: "arrow.right.circle.fill"
+                        )
+                        .frame(maxWidth: .infinity)
+                    }
                 }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(
+                    viewModel.isLoading ||
+                    viewModel.email.isEmpty ||
+                    viewModel.password.isEmpty
+                )
 
                 Text(
-                    "Use your ClubPlay account to access your community games and registrations."
+                    "Accounts are provided by your ClubPlay community organiser."
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
