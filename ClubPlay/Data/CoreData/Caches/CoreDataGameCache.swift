@@ -37,10 +37,7 @@ final class CoreDataGameCache {
                 try context.fetch(request).first
                 ?? CachedGame(context: context)
 
-            CachedGameMapper.update(
-                cached,
-                from: game
-            )
+            cached.update(from: game)
         }
 
         if context.hasChanges {
@@ -75,6 +72,6 @@ final class CoreDataGameCache {
         ]
 
         return try context.fetch(request)
-            .compactMap(CachedGameMapper.toDomain)
+            .compactMap { $0.toDomain() }
     }
 }

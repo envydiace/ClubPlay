@@ -15,9 +15,11 @@ enum CoreDataModelFactory {
         let model = NSManagedObjectModel()
 
         let cachedGame = makeCachedGameEntity()
+        let cachedRegistration = makeCachedRegistrationEntity()
 
         model.entities = [
-            cachedGame
+            cachedGame,
+            cachedRegistration
         ]
 
         return model
@@ -103,6 +105,63 @@ enum CoreDataModelFactory {
         ]
 
         // Prevent duplicate cached copies of the same game.
+        entity.uniquenessConstraints = [
+            ["id"]
+        ]
+
+        return entity
+    }
+    
+    private static func makeCachedRegistrationEntity() -> NSEntityDescription {
+        let entity = NSEntityDescription()
+
+        entity.name = "CachedRegistration"
+        entity.managedObjectClassName =
+            NSStringFromClass(CachedRegistration.self)
+
+        entity.properties = [
+            attribute(
+                name: "id",
+                type: .UUIDAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "memberID",
+                type: .UUIDAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "gameID",
+                type: .UUIDAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "registrationStatus",
+                type: .stringAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "attendanceStatus",
+                type: .stringAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "registeredAt",
+                type: .dateAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "updatedAt",
+                type: .dateAttributeType,
+                optional: false
+            ),
+            attribute(
+                name: "lastSyncedAt",
+                type: .dateAttributeType,
+                optional: false
+            )
+        ]
+
         entity.uniquenessConstraints = [
             ["id"]
         ]

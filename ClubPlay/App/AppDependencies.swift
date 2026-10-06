@@ -16,7 +16,7 @@ final class AppDependencies {
     // MARK: - Remote repositories
 
     let supabaseGameRepository: SupabaseWeeklyFootballGameRepository
-    let registrationRepository: SupabaseWeeklyGameRegistrationRepository
+    let supabaseRegistrationRepository: SupabaseWeeklyGameRegistrationRepository
     let membershipRepository: SupabaseCommunityMembershipRepository
     let memberRepository: SupabaseClubMemberRepository
     let communityRepository: SupabaseCommunityRepository
@@ -25,10 +25,12 @@ final class AppDependencies {
     // MARK: - Cache
 
     let gameCache: CoreDataGameCache
+    let registrationCache: CoreDataRegistrationCache
 
     // MARK: - App-facing repositories
 
     let gameRepository: WeeklyFootballGameRepository
+    let registrationRepository: WeeklyGameRegistrationRepository
 
     private init() {
 
@@ -36,7 +38,7 @@ final class AppDependencies {
         supabaseGameRepository =
             SupabaseWeeklyFootballGameRepository()
 
-        registrationRepository =
+        supabaseRegistrationRepository =
             SupabaseWeeklyGameRegistrationRepository()
 
         membershipRepository =
@@ -53,12 +55,20 @@ final class AppDependencies {
 
         // Core Data
         gameCache = CoreDataGameCache()
+        
+        registrationCache = CoreDataRegistrationCache()
 
         // Combined repository
         gameRepository =
             CachedWeeklyFootballGameRepository(
                 remoteRepository: supabaseGameRepository,
                 gameCache: gameCache
+            )
+        
+        registrationRepository =
+            CachedWeeklyGameRegistrationRepository(
+                remoteRepository: supabaseRegistrationRepository,
+                registrationCache: registrationCache
             )
     }
 }
