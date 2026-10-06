@@ -66,6 +66,17 @@ struct ManageGamesView: View {
                             )
                         }
                     }
+                    NavigationLink("Players") {
+                        GamePlayersView(
+                            viewModel: GamePlayersViewModel(
+                                registrationRepository:
+                                    SupabaseWeeklyGameRegistrationRepository(),
+                                memberRepository:
+                                    SupabaseClubMemberRepository()
+                            ),
+                            gameID: game.id
+                        )
+                    }
                 }
             }
         }

@@ -75,12 +75,23 @@ struct AuthView: View {
                                     )
                                 }
                             }
+                            
                             NavigationLink("Upcoming Games") {
                                 UpcomingGamesView(
                                     viewModel: UpcomingGamesViewModel(
                                         gameRepository: SupabaseWeeklyFootballGameRepository()
                                     ),
                                     communityID: community.id,
+                                    memberID: member.id
+                                )
+                            }
+                            
+                            NavigationLink("My Registrations") {
+                                MyRegistrationsView(
+                                    viewModel: MyRegistrationsViewModel(
+                                        registrationRepository:
+                                            SupabaseWeeklyGameRegistrationRepository()
+                                    ),
                                     memberID: member.id
                                 )
                             }
