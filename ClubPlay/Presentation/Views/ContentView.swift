@@ -24,7 +24,8 @@ struct ContentView: View {
                         gameRepository: dependencies.gameRepository
                     ),
                     communityID: community.id,
-                    memberID: member.id
+                    memberID: member.id,
+                    dependencies: dependencies
                 )
             }
             .tabItem {
@@ -46,8 +47,18 @@ struct ContentView: View {
 
             if membership.role == .organiser {
                 NavigationStack {
-                    Text("Manage Games")
-                        .navigationTitle("Manage")
+                    ManageGamesView(
+                        viewModel: ManageGamesViewModel(
+                            gameRepository: dependencies.gameRepository,
+                            publishGameUseCase: PublishGameUseCase(
+                                gameRepository: dependencies.gameRepository,
+                                membershipRepository:
+                                    dependencies.membershipRepository
+                            )
+                        ),
+                        communityID: community.id,
+                        organiserID: member.id
+                    )
                 }
                 .tabItem {
                     Label("Manage", systemImage: "slider.horizontal.3")

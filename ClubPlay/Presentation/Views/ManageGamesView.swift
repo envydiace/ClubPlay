@@ -10,11 +10,11 @@ import SwiftUI
 
 struct ManageGamesView: View {
     @StateObject var viewModel: ManageGamesViewModel
-    
-    let dependencies = AppDependencies.shared
 
     let communityID: UUID
     let organiserID: UUID
+    
+    let dependencies: AppDependencyProviding
 
     var body: some View {
         List {
@@ -106,6 +106,25 @@ struct ManageGamesView: View {
             await viewModel.loadGames(
                 communityID: communityID
             )
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink {
+                    CreateGameView(
+                        viewModel: CreateGameViewModel(
+                            createGameUseCase: CreateGameUseCase(
+                                gameRepository: dependencies.gameRepository,
+                                membershipRepository:
+                                    dependencies.membershipRepository
+                            )
+                        ),
+                        communityID: communityID,
+                        organiserID: organiserID
+                    )
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
         }
     }
 }

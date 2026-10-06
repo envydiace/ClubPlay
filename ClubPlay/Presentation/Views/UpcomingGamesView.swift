@@ -10,10 +10,11 @@ import SwiftUI
 
 struct UpcomingGamesView: View {
     @StateObject var viewModel: UpcomingGamesViewModel
-    private let dependencies = AppDependencies.shared
 
     let communityID: UUID
     let memberID: UUID
+    
+    let dependencies: AppDependencyProviding
 
     var body: some View {
         List {
