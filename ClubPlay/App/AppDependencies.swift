@@ -9,7 +9,7 @@
 import Foundation
 
 @MainActor
-final class AppDependencies {
+final class AppDependencies: AppDependencyProviding {
     static let shared = AppDependencies()
 
     // MARK: - Remote repositories

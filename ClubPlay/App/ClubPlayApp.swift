@@ -27,7 +27,8 @@ struct ClubPlayApp: App {
                     memberRepository: dependencies.memberRepository,
                     membershipRepository: dependencies.membershipRepository,
                     communityRepository: dependencies.communityRepository
-                )
+                ),
+                dependencies: dependencies
             )
         }
     }

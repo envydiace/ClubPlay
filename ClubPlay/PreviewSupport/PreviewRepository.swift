@@ -112,3 +112,94 @@ final class PreviewCommunityMembershipRepository:
         // Preview only.
     }
 }
+
+final class PreviewGameRepository: WeeklyFootballGameRepository {
+
+    func fetchUpcomingGames(
+        communityID: UUID
+    ) async throws -> [WeeklyFootballGame] {
+        MockData.upcomingGames
+    }
+
+    func fetchGames(
+        communityID: UUID
+    ) async throws -> [WeeklyFootballGame] {
+        MockData.upcomingGames
+    }
+
+    func fetchGame(
+        id: UUID
+    ) async throws -> WeeklyFootballGame? {
+        MockData.upcomingGames.first {
+            $0.id == id
+        }
+    }
+
+    func createGame(
+        _ game: WeeklyFootballGame
+    ) async throws {
+        // Preview only
+    }
+
+    func updateGame(
+        _ game: WeeklyFootballGame
+    ) async throws {
+        // Preview only
+    }
+}
+
+final class PreviewRegistrationRepository:
+    WeeklyGameRegistrationRepository {
+
+    func fetchRegistration(
+        id: UUID
+    ) async throws -> WeeklyGameRegistration? {
+        MockData.registrations.first {
+            $0.id == id
+        }
+    }
+
+    func fetchRegistration(
+        memberID: UUID,
+        gameID: UUID
+    ) async throws -> WeeklyGameRegistration? {
+        MockData.registrations.first {
+            $0.memberID == memberID &&
+            $0.gameID == gameID
+        }
+    }
+
+    func fetchRegistrations(
+        forGameID gameID: UUID
+    ) async throws -> [WeeklyGameRegistration] {
+        MockData.registrations.filter {
+            $0.gameID == gameID
+        }
+    }
+
+    func fetchRegistrations(
+        forMemberID memberID: UUID
+    ) async throws -> [WeeklyGameRegistration] {
+        MockData.registrations.filter {
+            $0.memberID == memberID
+        }
+    }
+
+    func saveRegistration(
+        _ registration: WeeklyGameRegistration
+    ) async throws {
+        // Preview only
+    }
+
+    func updateRegistration(
+        _ registration: WeeklyGameRegistration
+    ) async throws {
+        // Preview only
+    }
+
+    func promoteNextWaitlistedPlayer(
+        gameID: UUID
+    ) async throws -> UUID? {
+        nil
+    }
+}

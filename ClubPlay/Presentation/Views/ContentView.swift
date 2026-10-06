@@ -11,22 +11,34 @@ struct ContentView: View {
     let member: ClubMember
     let membership: CommunityMembership
     let community: Community
-    
+
+    let dependencies: AppDependencyProviding
+
     let onSignOut: () -> Void
 
     var body: some View {
         TabView {
             NavigationStack {
-                Text("Upcoming Games")
-                    .navigationTitle("Games")
+                UpcomingGamesView(
+                    viewModel: UpcomingGamesViewModel(
+                        gameRepository: dependencies.gameRepository
+                    ),
+                    communityID: community.id,
+                    memberID: member.id
+                )
             }
             .tabItem {
                 Label("Games", systemImage: "sportscourt")
             }
 
             NavigationStack {
-                Text("My Registrations")
-                    .navigationTitle("My Games")
+                MyRegistrationsView(
+                    viewModel: MyRegistrationsViewModel(
+                        registrationRepository:
+                            dependencies.registrationRepository
+                    ),
+                    memberID: member.id
+                )
             }
             .tabItem {
                 Label("My Games", systemImage: "checkmark.circle")
@@ -80,6 +92,7 @@ struct ContentView: View {
         member: MockData.member,
         membership: MockData.organiserMembership,
         community: MockData.community,
+        dependencies: PreviewDependencies(),
         onSignOut: { }
     )
 }
@@ -89,6 +102,7 @@ struct ContentView: View {
         member: MockData.member,
         membership: MockData.memberMembership,
         community: MockData.community,
+        dependencies: PreviewDependencies(),
         onSignOut: { }
     )
 }

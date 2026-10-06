@@ -11,6 +11,8 @@ import SwiftUI
 struct AuthView: View {
     @StateObject var viewModel: AuthViewModel
 
+    let dependencies: AppDependencyProviding
+
     var body: some View {
         Group {
             if let member = viewModel.currentMember,
@@ -21,6 +23,7 @@ struct AuthView: View {
                     member: member,
                     membership: membership,
                     community: community,
+                    dependencies: dependencies,
                     onSignOut: {
                         Task {
                             await viewModel.signOut()
@@ -82,24 +85,23 @@ struct AuthView: View {
 }
 
 #Preview("Signed Out") {
-    let authRepository = PreviewAuthRepository()
+    let dependencies = PreviewDependencies()
 
     AuthView(
         viewModel: AuthViewModel(
             signUpUseCase: SignUpUseCase(
-                authRepository: authRepository
+                authRepository: dependencies.authRepository
             ),
             signInUseCase: SignInUseCase(
-                authRepository: authRepository
+                authRepository: dependencies.authRepository
             ),
             signOutUseCase: SignOutUseCase(
-                authRepository: authRepository
+                authRepository: dependencies.authRepository
             ),
-            memberRepository: PreviewClubMemberRepository(),
-            membershipRepository:
-                PreviewCommunityMembershipRepository(),
-            communityRepository:
-                PreviewCommunityRepository()
-        )
+            memberRepository: dependencies.memberRepository,
+            membershipRepository: dependencies.membershipRepository,
+            communityRepository: dependencies.communityRepository
+        ),
+        dependencies: dependencies
     )
 }
