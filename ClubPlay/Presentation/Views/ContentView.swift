@@ -38,9 +38,12 @@ struct ContentView: View {
                 MyRegistrationsView(
                     viewModel: MyRegistrationsViewModel(
                         registrationRepository:
-                            dependencies.registrationRepository
+                            dependencies.registrationRepository,
+                        gameRepository:
+                            dependencies.gameRepository
                     ),
-                    memberID: member.id
+                    memberID: member.id,
+                    dependencies: dependencies
                 )
             }
             .tabItem {
