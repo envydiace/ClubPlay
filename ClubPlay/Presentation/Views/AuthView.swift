@@ -10,88 +10,50 @@ import SwiftUI
 
 struct AuthView: View {
     @StateObject var viewModel: AuthViewModel
-    
-    private let dependencies = AppDependencies.shared
 
     var body: some View {
+        Group {
+            if let member = viewModel.currentMember,
+               let membership = viewModel.currentMembership,
+               let community = viewModel.currentCommunity {
+
+                ContentView(
+                    member: member,
+                    membership: membership,
+                    community: community,
+                    onSignOut: {
+                        Task {
+                            await viewModel.signOut()
+                        }
+                    }
+                )
+
+            } else {
+                authenticationView
+            }
+        }
+    }
+
+    private var authenticationView: some View {
         NavigationStack {
             Form {
                 Section("Account") {
-                    TextField("Full name", text: $viewModel.fullName)
+                    TextField(
+                        "Full name",
+                        text: $viewModel.fullName
+                    )
 
-                    TextField("Email", text: $viewModel.email)
-                        .textInputAutocapitalization(.never)
-                        .keyboardType(.emailAddress)
+                    TextField(
+                        "Email",
+                        text: $viewModel.email
+                    )
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.emailAddress)
 
-                    SecureField("Password", text: $viewModel.password)
-                }
-                
-                if let member = viewModel.currentMember {
-                    Section("Profile") {
-                        Text(member.fullName)
-                        Text(member.emailAddress)
-                    }
-                }
-                
-                if let membership = viewModel.currentMembership,
-                   let community = viewModel.currentCommunity {
-
-                    Section("Community") {
-                        Text(community.name)
-                        Text(membership.role.rawValue.capitalized)
-                        
-                        if let member = viewModel.currentMember {
-                            
-                            if viewModel.currentMembership?.role == .organiser {
-                                NavigationLink("Create Game") {
-                                    CreateGameView(
-                                            viewModel: CreateGameViewModel(
-                                                createGameUseCase: CreateGameUseCase(
-                                                    gameRepository: dependencies.gameRepository,
-                                                    membershipRepository: dependencies.membershipRepository
-                                                )
-                                            ),
-                                            communityID: community.id,
-                                            organiserID: member.id
-                                        )
-                                }
-                                
-                                NavigationLink("Manage Games") {
-                                    ManageGamesView(
-                                        viewModel: ManageGamesViewModel(
-                                            gameRepository: dependencies.gameRepository,
-                                            publishGameUseCase: PublishGameUseCase(
-                                                gameRepository: dependencies.gameRepository,
-                                                membershipRepository: dependencies.membershipRepository
-                                            )
-                                        ),
-                                        communityID: community.id,
-                                        organiserID: member.id
-                                    )
-                                }
-                            }
-                            
-                            NavigationLink("Upcoming Games") {
-                                UpcomingGamesView(
-                                    viewModel: UpcomingGamesViewModel(
-                                        gameRepository: dependencies.gameRepository
-                                    ),
-                                    communityID: community.id,
-                                    memberID: member.id
-                                )
-                            }
-                            
-                            NavigationLink("My Registrations") {
-                                MyRegistrationsView(
-                                    viewModel: MyRegistrationsViewModel(
-                                        registrationRepository:
-                                            dependencies.registrationRepository
-                                    ),
-                                    memberID: member.id
-                                )
-                            }
-                        }
-                    }
+                    SecureField(
+                        "Password",
+                        text: $viewModel.password
+                    )
                 }
 
                 if let errorMessage = viewModel.errorMessage {
@@ -112,21 +74,32 @@ struct AuthView: View {
                         }
                     }
                 }
-
-                if let userID = viewModel.currentUserID {
-                    Section("Signed In") {
-                        Text(userID.uuidString)
-
-                        Button("Sign Out") {
-                            Task {
-                                await viewModel.signOut()
-                            }
-                        }
-                    }
-                }
             }
             .navigationTitle("ClubPlay")
             .disabled(viewModel.isLoading)
         }
     }
+}
+
+#Preview("Signed Out") {
+    let authRepository = PreviewAuthRepository()
+
+    AuthView(
+        viewModel: AuthViewModel(
+            signUpUseCase: SignUpUseCase(
+                authRepository: authRepository
+            ),
+            signInUseCase: SignInUseCase(
+                authRepository: authRepository
+            ),
+            signOutUseCase: SignOutUseCase(
+                authRepository: authRepository
+            ),
+            memberRepository: PreviewClubMemberRepository(),
+            membershipRepository:
+                PreviewCommunityMembershipRepository(),
+            communityRepository:
+                PreviewCommunityRepository()
+        )
+    )
 }
