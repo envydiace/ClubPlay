@@ -85,7 +85,12 @@ struct ManageGamesView: View {
                                         registrationRepository: registrationRepository,
                                         membershipRepository: membershipRepository,
                                         gameRepository: gameRepository
-                                    )
+                                    ),
+                                markAttendanceUseCase: MarkAttendanceUseCase(
+                                    registrationRepository: registrationRepository,
+                                    gameRepository: gameRepository,
+                                    membershipRepository: membershipRepository
+                                )
                             ),
                             gameID: game.id,
                             organiserID: organiserID

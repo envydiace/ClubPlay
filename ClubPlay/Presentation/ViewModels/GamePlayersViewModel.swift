@@ -17,16 +17,20 @@ final class GamePlayersViewModel: ObservableObject {
 
     private let registrationRepository: WeeklyGameRegistrationRepository
     private let memberRepository: ClubMemberRepository
+    
     private let changeRegistrationStatusUseCase: ChangeRegistrationStatusUseCase
+    private let markAttendanceUseCase: MarkAttendanceUseCase
 
     init(
         registrationRepository: WeeklyGameRegistrationRepository,
         memberRepository: ClubMemberRepository,
-        changeRegistrationStatusUseCase: ChangeRegistrationStatusUseCase
+        changeRegistrationStatusUseCase: ChangeRegistrationStatusUseCase,
+        markAttendanceUseCase: MarkAttendanceUseCase
     ) {
         self.registrationRepository = registrationRepository
         self.memberRepository = memberRepository
         self.changeRegistrationStatusUseCase = changeRegistrationStatusUseCase
+        self.markAttendanceUseCase = markAttendanceUseCase
     }
 
     func loadPlayers(gameID: UUID) async {
@@ -75,6 +79,29 @@ final class GamePlayersViewModel: ObservableObject {
             _ = try await changeRegistrationStatusUseCase.execute(
                 registrationID: registrationID,
                 newStatus: newStatus,
+                requestingMemberID: organiserID
+            )
+
+            await loadPlayers(gameID: gameID)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+    
+    func toggleAttendance(
+        registration: WeeklyGameRegistration,
+        organiserID: UUID,
+        gameID: UUID
+    ) async {
+        let newStatus: AttendanceStatus =
+            registration.attendanceStatus == .present
+            ? .absent
+            : .present
+
+        do {
+            _ = try await markAttendanceUseCase.execute(
+                registrationID: registration.id,
+                attendanceStatus: newStatus,
                 requestingMemberID: organiserID
             )
 

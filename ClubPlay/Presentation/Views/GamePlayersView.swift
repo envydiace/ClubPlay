@@ -52,6 +52,28 @@ struct GamePlayersView: View {
                             }
                         }
                     }
+                    
+                    if item.registration.registrationStatus == .confirmed {
+                        Button {
+                            Task {
+                                await viewModel.toggleAttendance(
+                                    registration: item.registration,
+                                    organiserID: organiserID,
+                                    gameID: gameID
+                                )
+                            }
+                        } label: {
+                            Label(
+                                item.registration.attendanceStatus == .present
+                                    ? "Present"
+                                    : "Absent",
+                                systemImage:
+                                    item.registration.attendanceStatus == .present
+                                    ? "checkmark.circle.fill"
+                                    : "circle"
+                            )
+                        }
+                    }
                 }
             }
         }
