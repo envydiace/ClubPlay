@@ -10,6 +10,7 @@ import SwiftUI
 
 struct UpcomingGamesView: View {
     @StateObject var viewModel: UpcomingGamesViewModel
+    private let dependencies = AppDependencies.shared
 
     let communityID: UUID
     let memberID: UUID
@@ -28,37 +29,34 @@ struct UpcomingGamesView: View {
             ForEach(viewModel.games) { game in
                 NavigationLink {
                     let gameRepository =
-                            SupabaseWeeklyFootballGameRepository()
+                        dependencies.gameRepository
 
-                        let registrationRepository =
-                            SupabaseWeeklyGameRegistrationRepository()
+                    let registrationRepository =
+                        dependencies.registrationRepository
+                    
+                    let promoteUseCase =
+                        PromoteWaitlistedPlayerUseCase(
+                            registrationRepository: registrationRepository
+                        )
 
-                        let promoteUseCase =
-                            PromoteWaitlistedPlayerUseCase(
-                                registrationRepository: registrationRepository
-                            )
+                    let cancelUseCase =
+                        CancelGameRegistrationUseCase(
+                            gameRepository: gameRepository,
+                            registrationRepository: registrationRepository,
+                            promoteWaitlistedPlayerUseCase: promoteUseCase
+                        )
 
-                        let cancelUseCase =
-                            CancelGameRegistrationUseCase(
-                                gameRepository: gameRepository,
-                                registrationRepository: registrationRepository,
-                                promoteWaitlistedPlayerUseCase: promoteUseCase
-                            )
-
-                        let registerUseCase =
-                            RegisterForGameUseCase(
-                                gameRepository: gameRepository,
-                                registrationRepository: registrationRepository
-                            )
+                    let registerUseCase =
+                        RegisterForGameUseCase(
+                            gameRepository: gameRepository,
+                            registrationRepository: registrationRepository
+                        )
                     
                     GameDetailView(
                         game: game,
                         memberID: memberID,
                         viewModel: GameDetailViewModel(
-                            registerForGameUseCase: RegisterForGameUseCase(
-                                gameRepository: gameRepository,
-                                registrationRepository: registrationRepository
-                            ),
+                            registerForGameUseCase: registerUseCase,
                             cancelGameRegistrationUseCase: cancelUseCase,
                             registrationRepository: registrationRepository
                         )

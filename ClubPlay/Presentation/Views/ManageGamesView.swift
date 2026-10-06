@@ -10,6 +10,8 @@ import SwiftUI
 
 struct ManageGamesView: View {
     @StateObject var viewModel: ManageGamesViewModel
+    
+    let dependencies = AppDependencies.shared
 
     let communityID: UUID
     let organiserID: UUID
@@ -46,7 +48,7 @@ struct ManageGamesView: View {
                     if game.status == .draft || game.status == .published {
                         NavigationLink("Edit") {
                             let gameRepository =
-                                SupabaseWeeklyFootballGameRepository()
+                                dependencies.gameRepository
 
                             EditGameView(
                                 viewModel: EditGameViewModel(
@@ -54,9 +56,9 @@ struct ManageGamesView: View {
                                     editGameUseCase: EditGameUseCase(
                                         gameRepository: gameRepository,
                                         membershipRepository:
-                                            SupabaseCommunityMembershipRepository(),
+                                            dependencies.membershipRepository,
                                         registrationRepository:
-                                            SupabaseWeeklyGameRegistrationRepository(),
+                                            dependencies.registrationRepository,
 
                                         notificationRepository:
                                             NoOpNotificationRepository()
@@ -68,18 +70,18 @@ struct ManageGamesView: View {
                     }
                     NavigationLink("Players") {
                         let registrationRepository =
-                            SupabaseWeeklyGameRegistrationRepository()
+                            dependencies.registrationRepository
 
                         let membershipRepository =
-                            SupabaseCommunityMembershipRepository()
+                            dependencies.membershipRepository
 
                         let gameRepository =
-                            SupabaseWeeklyFootballGameRepository()
+                            dependencies.gameRepository
 
                         GamePlayersView(
                             viewModel: GamePlayersViewModel(
                                 registrationRepository: registrationRepository,
-                                memberRepository: SupabaseClubMemberRepository(),
+                                memberRepository: dependencies.memberRepository,
                                 changeRegistrationStatusUseCase:
                                     ChangeRegistrationStatusUseCase(
                                         registrationRepository: registrationRepository,

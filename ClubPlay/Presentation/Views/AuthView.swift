@@ -10,6 +10,8 @@ import SwiftUI
 
 struct AuthView: View {
     @StateObject var viewModel: AuthViewModel
+    
+    private let dependencies = AppDependencies.shared
 
     var body: some View {
         NavigationStack {
@@ -39,35 +41,28 @@ struct AuthView: View {
                         Text(membership.role.rawValue.capitalized)
                         
                         if let member = viewModel.currentMember {
-
-                            let gameRepository = SupabaseWeeklyFootballGameRepository()
-                            let membershipRepository = SupabaseCommunityMembershipRepository()
-
+                            
                             if viewModel.currentMembership?.role == .organiser {
                                 NavigationLink("Create Game") {
                                     CreateGameView(
-                                        viewModel: CreateGameViewModel(
-                                            createGameUseCase: CreateGameUseCase(
-                                                gameRepository: gameRepository,
-                                                membershipRepository: membershipRepository
-                                            )
-                                        ),
-                                        communityID: community.id,
-                                        organiserID: member.id
-                                    )
+                                            viewModel: CreateGameViewModel(
+                                                createGameUseCase: CreateGameUseCase(
+                                                    gameRepository: dependencies.gameRepository,
+                                                    membershipRepository: dependencies.membershipRepository
+                                                )
+                                            ),
+                                            communityID: community.id,
+                                            organiserID: member.id
+                                        )
                                 }
                                 
                                 NavigationLink("Manage Games") {
-                                    let gameRepository =
-                                        SupabaseWeeklyFootballGameRepository()
-
                                     ManageGamesView(
                                         viewModel: ManageGamesViewModel(
-                                            gameRepository: gameRepository,
+                                            gameRepository: dependencies.gameRepository,
                                             publishGameUseCase: PublishGameUseCase(
-                                                gameRepository: gameRepository,
-                                                membershipRepository:
-                                                    SupabaseCommunityMembershipRepository()
+                                                gameRepository: dependencies.gameRepository,
+                                                membershipRepository: dependencies.membershipRepository
                                             )
                                         ),
                                         communityID: community.id,
@@ -79,7 +74,7 @@ struct AuthView: View {
                             NavigationLink("Upcoming Games") {
                                 UpcomingGamesView(
                                     viewModel: UpcomingGamesViewModel(
-                                        gameRepository: SupabaseWeeklyFootballGameRepository()
+                                        gameRepository: dependencies.gameRepository
                                     ),
                                     communityID: community.id,
                                     memberID: member.id
@@ -90,7 +85,7 @@ struct AuthView: View {
                                 MyRegistrationsView(
                                     viewModel: MyRegistrationsViewModel(
                                         registrationRepository:
-                                            SupabaseWeeklyGameRegistrationRepository()
+                                            dependencies.registrationRepository
                                     ),
                                     memberID: member.id
                                 )
