@@ -80,7 +80,9 @@ struct MyRegistrationsView: View {
                 cancelGameRegistrationUseCase:
                     cancelUseCase,
                 registrationRepository:
-                    registrationRepository
+                    registrationRepository,
+                widgetSyncService:
+                    dependencies.widgetSyncService
             )
         )
     }

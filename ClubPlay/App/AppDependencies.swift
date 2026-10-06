@@ -11,6 +11,8 @@ import Foundation
 @MainActor
 final class AppDependencies: AppDependencyProviding {
     static let shared = AppDependencies()
+    
+    let widgetSyncService: WidgetSyncing
 
     // MARK: - Remote repositories
 
@@ -126,6 +128,11 @@ final class AppDependencies: AppDependencyProviding {
                 remoteRepository: supabaseRegistrationRepository,
                 registrationCache: registrationCache
             )
+        
+        widgetSyncService = WidgetSyncService(
+            gameRepository: gameRepository,
+            registrationRepository: registrationRepository
+        )
 
         authRepository =
             SupabaseAuthRepository()

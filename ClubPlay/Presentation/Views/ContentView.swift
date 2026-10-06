@@ -40,7 +40,8 @@ struct ContentView: View {
                         registrationRepository:
                             dependencies.registrationRepository,
                         gameRepository:
-                            dependencies.gameRepository
+                            dependencies.gameRepository,
+                        widgetSyncService: dependencies.widgetSyncService
                     ),
                     memberID: member.id,
                     dependencies: dependencies

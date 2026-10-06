@@ -30,18 +30,22 @@ final class AuthViewModel: ObservableObject {
     private let membershipRepository: CommunityMembershipRepository
     private let communityRepository: CommunityRepository
     
+    private let widgetSyncService: WidgetSyncing
+    
     init(
         signInUseCase: SignInUseCase,
         signOutUseCase: SignOutUseCase,
         memberRepository: ClubMemberRepository,
         membershipRepository: CommunityMembershipRepository,
-        communityRepository: CommunityRepository
+        communityRepository: CommunityRepository,
+        widgetSyncService: WidgetSyncing
     ) {
         self.signInUseCase = signInUseCase
         self.signOutUseCase = signOutUseCase
         self.memberRepository = memberRepository
         self.membershipRepository = membershipRepository
         self.communityRepository = communityRepository
+        self.widgetSyncService = widgetSyncService
     }
 
     func signIn() async {
@@ -57,18 +61,28 @@ final class AuthViewModel: ObservableObject {
             )
 
             currentUserID = userID
-            currentMember = try await memberRepository.fetchMember(id: userID)
-            let memberships = try await membershipRepository.fetchMemberships(
-                forMemberID: userID
-            )
+
+            currentMember =
+                try await memberRepository.fetchMember(id: userID)
+
+            let memberships =
+                try await membershipRepository.fetchMemberships(
+                    forMemberID: userID
+                )
 
             if let membership = memberships.first {
                 currentMembership = membership
 
-                currentCommunity = try await communityRepository.fetchCommunity(
-                    id: membership.communityID
-                )
+                currentCommunity =
+                    try await communityRepository.fetchCommunity(
+                        id: membership.communityID
+                    )
             }
+
+            await widgetSyncService.refreshNextGame(
+                memberID: userID
+            )
+
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -78,6 +92,8 @@ final class AuthViewModel: ObservableObject {
         do {
             try await signOutUseCase.execute()
 
+            widgetSyncService.clear()
+            
             currentUserID = nil
             currentMember = nil
             currentMembership = nil
