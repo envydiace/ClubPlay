@@ -77,6 +77,9 @@ struct ClubPlayWidgetEntryView: View {
                 case .systemSmall:
                     smallView(snapshot)
 
+                case .systemMedium:
+                    mediumView(snapshot)
+
                 default:
                     mediumView(snapshot)
                 }
@@ -88,6 +91,9 @@ struct ClubPlayWidgetEntryView: View {
             .fill.tertiary,
             for: .widget
         )
+        .widgetURL(
+            URL(string: "clubplay://games")
+        )
     }
 
     private func smallView(
@@ -97,32 +103,42 @@ struct ClubPlayWidgetEntryView: View {
             alignment: .leading,
             spacing: 8
         ) {
-            Label(
-                "Next Game",
-                systemImage: "sportscourt"
-            )
-            .font(.caption)
-            .foregroundStyle(.secondary)
+            Image(systemName: "sportscourt")
+                .font(.title3)
+                .foregroundStyle(.secondary)
 
-            Spacer()
+            Spacer(minLength: 0)
 
             Text(snapshot.gameName)
                 .font(.headline)
+                .fontWeight(.semibold)
                 .lineLimit(2)
+                .minimumScaleFactor(0.8)
 
             Text(
-                snapshot.kickOffAt.formatted(
-                    date: .abbreviated,
-                    time: .shortened
+                compactDateTime(
+                    snapshot.kickOffAt
                 )
             )
             .font(.caption)
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
 
             Text(snapshot.registrationStatus)
-                .font(.caption2)
+                .font(.caption)
                 .fontWeight(.semibold)
-                .foregroundStyle(.green)
+                .foregroundStyle(
+                    statusColor(
+                        snapshot.registrationStatus
+                    )
+                )
+                .lineLimit(1)
         }
+        .frame(
+            maxWidth: .infinity,
+            maxHeight: .infinity,
+            alignment: .leading
+        )
         .padding()
     }
 
@@ -143,6 +159,7 @@ struct ClubPlayWidgetEntryView: View {
 
                 Text(snapshot.gameName)
                     .font(.headline)
+                    .lineLimit(2)
 
                 Label(
                     snapshot.venueName,
@@ -150,6 +167,7 @@ struct ClubPlayWidgetEntryView: View {
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                .lineLimit(1)
             }
 
             Spacer()
@@ -178,26 +196,86 @@ struct ClubPlayWidgetEntryView: View {
                 Text(snapshot.registrationStatus)
                     .font(.caption)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.green)
+                    .foregroundStyle(
+                        statusColor(
+                            snapshot.registrationStatus
+                        )
+                    )
             }
         }
         .padding()
     }
 
+    @ViewBuilder
     private var emptyView: some View {
-        VStack(spacing: 8) {
-            Image(systemName: "sportscourt")
-                .font(.title2)
+        switch family {
+        case .systemSmall:
+            VStack(spacing: 10) {
+                Image(systemName: "sportscourt")
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
 
-            Text("No Upcoming Game")
-                .font(.headline)
+                Text("No Upcoming Game")
+                    .font(.headline)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
 
-            Text("Register for a game in ClubPlay.")
+                Text("Open ClubPlay")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity
+            )
+            .padding()
+
+        default:
+            VStack(spacing: 8) {
+                Image(systemName: "sportscourt")
+                    .font(.title2)
+                    .foregroundStyle(.secondary)
+
+                Text("No Upcoming Game")
+                    .font(.headline)
+
+                Text(
+                    "Register for a game in ClubPlay."
+                )
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
+            }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity
+            )
+            .padding()
         }
-        .padding()
+    }
+
+    private func compactDateTime(
+        _ date: Date
+    ) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM • h:mm a"
+        return formatter.string(from: date)
+    }
+
+    private func statusColor(
+        _ status: String
+    ) -> Color {
+        switch status.lowercased() {
+        case "confirmed":
+            return .green
+
+        case "waitlisted":
+            return .orange
+
+        default:
+            return .secondary
+        }
     }
 }
 
@@ -231,7 +309,7 @@ struct ClubPlayWidget: Widget {
     ClubPlayWidgetEntry(
         date: Date(),
         snapshot: NextGameWidgetSnapshot(
-            gameName: "Sunday Football",
+            gameName: "Wednesday Night Football",
             venueName: "Sydney Football Centre",
             kickOffAt: Date().addingTimeInterval(3600),
             registrationStatus: "Confirmed"
@@ -267,4 +345,3 @@ struct ClubPlayWidget: Widget {
         snapshot: nil
     )
 }
-
