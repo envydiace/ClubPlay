@@ -19,13 +19,17 @@ final class MyRegistrationsViewModel: ObservableObject {
 
     private let gameRepository:
         WeeklyFootballGameRepository
+    
+    private let widgetSyncService: WidgetSyncing
 
     init(
         registrationRepository: WeeklyGameRegistrationRepository,
-        gameRepository: WeeklyFootballGameRepository
+        gameRepository: WeeklyFootballGameRepository,
+        widgetSyncService: WidgetSyncing
     ) {
         self.registrationRepository = registrationRepository
         self.gameRepository = gameRepository
+        self.widgetSyncService = widgetSyncService
     }
 
     func loadRegistrations(
@@ -62,6 +66,10 @@ final class MyRegistrationsViewModel: ObservableObject {
             items = loadedItems.sorted {
                 $0.game.kickOffAt < $1.game.kickOffAt
             }
+            
+            await widgetSyncService.refreshNextGame(
+                memberID: memberID
+            )
 
         } catch {
             errorMessage = error.localizedDescription

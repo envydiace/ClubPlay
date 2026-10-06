@@ -151,7 +151,9 @@ struct UpcomingGamesView: View {
                 cancelGameRegistrationUseCase:
                     cancelUseCase,
                 registrationRepository:
-                    registrationRepository
+                    registrationRepository,
+                widgetSyncService:
+                    dependencies.widgetSyncService
             )
         )
     }

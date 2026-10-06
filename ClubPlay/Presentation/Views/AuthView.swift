@@ -161,7 +161,8 @@ struct AuthView: View {
             ),
             memberRepository: dependencies.memberRepository,
             membershipRepository: dependencies.membershipRepository,
-            communityRepository: dependencies.communityRepository
+            communityRepository: dependencies.communityRepository,
+            widgetSyncService: dependencies.widgetSyncService
         ),
         dependencies: dependencies
     )

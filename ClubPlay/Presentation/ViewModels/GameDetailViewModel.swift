@@ -19,16 +19,23 @@ final class GameDetailViewModel: ObservableObject {
     private let registerForGameUseCase: RegisterForGameUseCase
     private let cancelGameRegistrationUseCase: CancelGameRegistrationUseCase
     private let registrationRepository: WeeklyGameRegistrationRepository
+    
+    private let widgetSyncService: WidgetSyncing
 
     init(
-            registerForGameUseCase: RegisterForGameUseCase,
-            cancelGameRegistrationUseCase: CancelGameRegistrationUseCase,
-            registrationRepository: WeeklyGameRegistrationRepository
-        ) {
-            self.registerForGameUseCase = registerForGameUseCase
-            self.cancelGameRegistrationUseCase = cancelGameRegistrationUseCase
-            self.registrationRepository = registrationRepository
-        }
+        registerForGameUseCase: RegisterForGameUseCase,
+        cancelGameRegistrationUseCase: CancelGameRegistrationUseCase,
+        registrationRepository: WeeklyGameRegistrationRepository,
+        widgetSyncService: WidgetSyncing
+    ) {
+        self.registerForGameUseCase = registerForGameUseCase
+        self.cancelGameRegistrationUseCase =
+            cancelGameRegistrationUseCase
+        self.registrationRepository =
+            registrationRepository
+        self.widgetSyncService =
+            widgetSyncService
+    }
     
     func loadRegistration(
             memberID: UUID,
@@ -61,6 +68,10 @@ final class GameDetailViewModel: ObservableObject {
             )
 
             registration = result
+
+            await widgetSyncService.refreshNextGame(
+                memberID: memberID
+            )
 
             switch result.registrationStatus {
             case .confirmed:
@@ -95,6 +106,11 @@ final class GameDetailViewModel: ObservableObject {
             )
 
             registration = result
+
+            await widgetSyncService.refreshNextGame(
+                memberID: memberID
+            )
+
             successMessage = "Registration cancelled."
 
         } catch {

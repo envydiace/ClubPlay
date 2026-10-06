@@ -15,4 +15,6 @@ protocol AppDependencyProviding {
 
     var gameRepository: WeeklyFootballGameRepository { get }
     var registrationRepository: WeeklyGameRegistrationRepository { get }
+    
+    var widgetSyncService: WidgetSyncing { get }
 }
