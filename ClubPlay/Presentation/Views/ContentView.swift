@@ -72,33 +72,18 @@ struct ContentView: View {
             }
 
             NavigationStack {
-                VStack(spacing: 12) {
-                    Image(systemName: "person.circle.fill")
-                        .font(.system(size: 72))
-
-                    Text(member.fullName)
-                        .font(.title2)
-                        .fontWeight(.semibold)
-
-                    Text(member.emailAddress)
-                        .foregroundStyle(.secondary)
-
-                    Text(community.name)
-                        .font(.headline)
-
-                    Text(membership.role.rawValue.capitalized)
-                        .foregroundStyle(.secondary)
-
-                    Button("Sign Out", role: .destructive) {
-                        onSignOut()
-                    }
-                    .padding(.top)
-                }
-                .padding()
-                .navigationTitle("Profile")
+                ProfileView(
+                    member: member,
+                    membership: membership,
+                    community: community,
+                    onSignOut: onSignOut
+                )
             }
             .tabItem {
-                Label("Profile", systemImage: "person.circle")
+                Label(
+                    "Profile",
+                    systemImage: "person.circle"
+                )
             }
         }
     }

@@ -38,49 +38,121 @@ struct AuthView: View {
     }
 
     private var authenticationView: some View {
-        NavigationStack {
-            Form {
-                Section("Account") {
-                    TextField(
-                        "Full name",
-                        text: $viewModel.fullName
-                    )
+        ScrollView {
+            VStack(spacing: 28) {
 
-                    TextField(
-                        "Email",
-                        text: $viewModel.email
-                    )
-                    .textInputAutocapitalization(.never)
-                    .keyboardType(.emailAddress)
+                // MARK: - Header
 
-                    SecureField(
-                        "Password",
-                        text: $viewModel.password
-                    )
+                VStack(spacing: 10) {
+                    Image(systemName: "sportscourt.fill")
+                        .font(.system(size: 54))
+                        .foregroundStyle(.blue)
+
+                    Text("ClubPlay")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+
+                    Text("Join games. Manage your club. Play together.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                 }
+                .padding(.top, 40)
+
+                // MARK: - Account card
+
+                VStack(alignment: .leading, spacing: 18) {
+                    Text("Account")
+                        .font(.headline)
+
+                    VStack(spacing: 14) {
+                        TextField(
+                            "Email",
+                            text: $viewModel.email
+                        )
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.emailAddress)
+                        .textFieldStyle(.roundedBorder)
+
+                        SecureField(
+                            "Password",
+                            text: $viewModel.password
+                        )
+                        .textFieldStyle(.roundedBorder)
+                    }
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(
+                            Color(
+                                uiColor: .secondarySystemBackground
+                            )
+                        )
+                )
+
+                // MARK: - Error
 
                 if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
+                    HStack(spacing: 10) {
+                        Image(
+                            systemName:
+                                "exclamationmark.triangle.fill"
+                        )
                         .foregroundStyle(.red)
+
+                        Text(errorMessage)
+                            .font(.subheadline)
+
+                        Spacer()
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(.red.opacity(0.08))
+                    )
                 }
 
-                Section {
-                    Button("Sign Up") {
-                        Task {
-                            await viewModel.signUp()
-                        }
-                    }
+                // MARK: - Actions
 
-                    Button("Sign In") {
+                VStack(spacing: 12) {
+                    Button {
                         Task {
                             await viewModel.signIn()
                         }
+                    } label: {
+                        if viewModel.isLoading {
+                            ProgressView()
+                                .frame(maxWidth: .infinity)
+                        } else {
+                            Label(
+                                "Sign In",
+                                systemImage: "arrow.right.circle.fill"
+                            )
+                            .frame(maxWidth: .infinity)
+                        }
                     }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .disabled(viewModel.isLoading)
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                    .disabled(viewModel.isLoading)
                 }
+
+                Text(
+                    "Use your ClubPlay account to access your community games and registrations."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
             }
-            .navigationTitle("ClubPlay")
-            .disabled(viewModel.isLoading)
+            .padding()
         }
+        .background(
+            Color(uiColor: .systemGroupedBackground)
+        )
     }
 }
 
@@ -89,9 +161,6 @@ struct AuthView: View {
 
     AuthView(
         viewModel: AuthViewModel(
-            signUpUseCase: SignUpUseCase(
-                authRepository: dependencies.authRepository
-            ),
             signInUseCase: SignInUseCase(
                 authRepository: dependencies.authRepository
             ),

@@ -15,9 +15,6 @@ struct ClubPlayApp: App {
 
             AuthView(
                 viewModel: AuthViewModel(
-                    signUpUseCase: SignUpUseCase(
-                        authRepository: dependencies.authRepository
-                    ),
                     signInUseCase: SignInUseCase(
                         authRepository: dependencies.authRepository
                     ),

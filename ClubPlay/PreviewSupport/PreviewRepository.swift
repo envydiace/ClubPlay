@@ -10,15 +10,6 @@ import Foundation
 final class PreviewAuthRepository: AuthRepository {
     private var signedInUserID: UUID?
 
-    func signUp(
-        email: String,
-        password: String,
-        fullName: String
-    ) async throws -> UUID {
-        signedInUserID = MockData.memberID
-        return MockData.memberID
-    }
-
     func signIn(
         email: String,
         password: String
