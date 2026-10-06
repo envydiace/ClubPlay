@@ -21,7 +21,9 @@ struct ContentView: View {
             NavigationStack {
                 UpcomingGamesView(
                     viewModel: UpcomingGamesViewModel(
-                        gameRepository: dependencies.gameRepository
+                        gameRepository: dependencies.gameRepository,
+                        registrationRepository:
+                            dependencies.registrationRepository
                     ),
                     communityID: community.id,
                     memberID: member.id,

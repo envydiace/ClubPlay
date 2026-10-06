@@ -31,12 +31,14 @@ struct UpcomingGamesView: View {
         .navigationTitle("Upcoming Games")
         .task {
             await viewModel.loadGames(
-                communityID: communityID
+                communityID: communityID,
+                memberID: memberID
             )
         }
         .refreshable {
             await viewModel.loadGames(
-                communityID: communityID
+                communityID: communityID,
+                memberID: memberID
             )
         }
     }
@@ -48,7 +50,10 @@ struct UpcomingGamesView: View {
                     NavigationLink {
                         gameDetailDestination(for: game)
                     } label: {
-                        GameCardView(game: game)
+                        GameCardView(
+                            game: game,
+                            status: viewModel.statusText(for: game)
+                        )
                     }
                     .buttonStyle(.plain)
                 }
@@ -84,7 +89,8 @@ struct UpcomingGamesView: View {
             Button("Try Again") {
                 Task {
                     await viewModel.loadGames(
-                        communityID: communityID
+                        communityID: communityID,
+                        memberID: memberID
                     )
                 }
             }
@@ -153,6 +159,7 @@ struct UpcomingGamesView: View {
 
 private struct GameCardView: View {
     let game: WeeklyFootballGame
+    let status: String
 
     var body: some View {
         VStack(
@@ -228,16 +235,16 @@ private struct GameCardView: View {
 
                 Spacer()
 
-                Text("Registration Open")
+                Text(status)
                     .font(.caption)
                     .fontWeight(.semibold)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
                     .background(
                         Capsule()
-                            .fill(.green.opacity(0.12))
+                            .fill(statusColor.opacity(0.12))
                     )
-                    .foregroundStyle(.green)
+                    .foregroundStyle(statusColor)
             }
             .font(.subheadline)
         }
@@ -252,5 +259,27 @@ private struct GameCardView: View {
                 )
             )
         )
+    }
+    
+    private var statusColor: Color {
+        switch status {
+        case "Confirmed":
+            return .green
+
+        case "Waitlisted":
+            return .orange
+
+        case "Registration Open":
+            return .blue
+
+        case "Opens Soon":
+            return .purple
+
+        case "Registration Closed":
+            return .gray
+
+        default:
+            return .secondary
+        }
     }
 }
