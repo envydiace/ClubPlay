@@ -9,12 +9,6 @@
 import Foundation
 
 protocol AuthRepository {
-    func signUp(
-        email: String,
-        password: String,
-        fullName: String
-    ) async throws -> UUID
-
     func signIn(
         email: String,
         password: String

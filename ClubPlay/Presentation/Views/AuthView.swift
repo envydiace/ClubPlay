@@ -10,123 +10,159 @@ import SwiftUI
 
 struct AuthView: View {
     @StateObject var viewModel: AuthViewModel
-    
-    private let dependencies = AppDependencies.shared
+
+    let dependencies: AppDependencyProviding
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("Account") {
-                    TextField("Full name", text: $viewModel.fullName)
+        Group {
+            if let member = viewModel.currentMember,
+               let membership = viewModel.currentMembership,
+               let community = viewModel.currentCommunity {
 
-                    TextField("Email", text: $viewModel.email)
-                        .textInputAutocapitalization(.never)
-                        .keyboardType(.emailAddress)
-
-                    SecureField("Password", text: $viewModel.password)
-                }
-                
-                if let member = viewModel.currentMember {
-                    Section("Profile") {
-                        Text(member.fullName)
-                        Text(member.emailAddress)
-                    }
-                }
-                
-                if let membership = viewModel.currentMembership,
-                   let community = viewModel.currentCommunity {
-
-                    Section("Community") {
-                        Text(community.name)
-                        Text(membership.role.rawValue.capitalized)
-                        
-                        if let member = viewModel.currentMember {
-                            
-                            if viewModel.currentMembership?.role == .organiser {
-                                NavigationLink("Create Game") {
-                                    CreateGameView(
-                                            viewModel: CreateGameViewModel(
-                                                createGameUseCase: CreateGameUseCase(
-                                                    gameRepository: dependencies.gameRepository,
-                                                    membershipRepository: dependencies.membershipRepository
-                                                )
-                                            ),
-                                            communityID: community.id,
-                                            organiserID: member.id
-                                        )
-                                }
-                                
-                                NavigationLink("Manage Games") {
-                                    ManageGamesView(
-                                        viewModel: ManageGamesViewModel(
-                                            gameRepository: dependencies.gameRepository,
-                                            publishGameUseCase: PublishGameUseCase(
-                                                gameRepository: dependencies.gameRepository,
-                                                membershipRepository: dependencies.membershipRepository
-                                            )
-                                        ),
-                                        communityID: community.id,
-                                        organiserID: member.id
-                                    )
-                                }
-                            }
-                            
-                            NavigationLink("Upcoming Games") {
-                                UpcomingGamesView(
-                                    viewModel: UpcomingGamesViewModel(
-                                        gameRepository: dependencies.gameRepository
-                                    ),
-                                    communityID: community.id,
-                                    memberID: member.id
-                                )
-                            }
-                            
-                            NavigationLink("My Registrations") {
-                                MyRegistrationsView(
-                                    viewModel: MyRegistrationsViewModel(
-                                        registrationRepository:
-                                            dependencies.registrationRepository
-                                    ),
-                                    memberID: member.id
-                                )
-                            }
-                        }
-                    }
-                }
-
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .foregroundStyle(.red)
-                }
-
-                Section {
-                    Button("Sign Up") {
+                ContentView(
+                    member: member,
+                    membership: membership,
+                    community: community,
+                    dependencies: dependencies,
+                    onSignOut: {
                         Task {
-                            await viewModel.signUp()
+                            await viewModel.signOut()
                         }
                     }
+                )
 
-                    Button("Sign In") {
-                        Task {
-                            await viewModel.signIn()
-                        }
-                    }
-                }
-
-                if let userID = viewModel.currentUserID {
-                    Section("Signed In") {
-                        Text(userID.uuidString)
-
-                        Button("Sign Out") {
-                            Task {
-                                await viewModel.signOut()
-                            }
-                        }
-                    }
-                }
+            } else {
+                authenticationView
             }
-            .navigationTitle("ClubPlay")
-            .disabled(viewModel.isLoading)
         }
     }
+
+    private var authenticationView: some View {
+        ScrollView {
+            VStack(spacing: 28) {
+
+                VStack(spacing: 12) {
+                    Image(systemName: "sportscourt.fill")
+                        .font(.system(size: 58))
+                        .foregroundStyle(.blue)
+
+                    Text("ClubPlay")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+
+                    Text("Sign in to access your community games")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.top, 60)
+
+                VStack(alignment: .leading, spacing: 18) {
+                    Text("Welcome Back")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+
+                    TextField(
+                        "Email",
+                        text: $viewModel.email
+                    )
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.emailAddress)
+                    .textContentType(.emailAddress)
+                    .textFieldStyle(.roundedBorder)
+
+                    SecureField(
+                        "Password",
+                        text: $viewModel.password
+                    )
+                    .textContentType(.password)
+                    .textFieldStyle(.roundedBorder)
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(
+                            Color(
+                                uiColor: .secondarySystemBackground
+                            )
+                        )
+                )
+
+                if let errorMessage = viewModel.errorMessage {
+                    HStack(spacing: 10) {
+                        Image(
+                            systemName:
+                                "exclamationmark.triangle.fill"
+                        )
+                        .foregroundStyle(.red)
+
+                        Text(errorMessage)
+                            .font(.subheadline)
+
+                        Spacer()
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(.red.opacity(0.08))
+                    )
+                }
+
+                Button {
+                    Task {
+                        await viewModel.signIn()
+                    }
+                } label: {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Label(
+                            "Sign In",
+                            systemImage: "arrow.right.circle.fill"
+                        )
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(
+                    viewModel.isLoading ||
+                    viewModel.email.isEmpty ||
+                    viewModel.password.isEmpty
+                )
+
+                Text(
+                    "Accounts are provided by your ClubPlay community organiser."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal)
+            }
+            .padding()
+        }
+        .background(
+            Color(uiColor: .systemGroupedBackground)
+        )
+    }
+}
+
+#Preview("Signed Out") {
+    let dependencies = PreviewDependencies()
+
+    AuthView(
+        viewModel: AuthViewModel(
+            signInUseCase: SignInUseCase(
+                authRepository: dependencies.authRepository
+            ),
+            signOutUseCase: SignOutUseCase(
+                authRepository: dependencies.authRepository
+            ),
+            memberRepository: dependencies.memberRepository,
+            membershipRepository: dependencies.membershipRepository,
+            communityRepository: dependencies.communityRepository
+        ),
+        dependencies: dependencies
+    )
 }

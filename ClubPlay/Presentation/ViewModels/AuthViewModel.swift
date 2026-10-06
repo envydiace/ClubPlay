@@ -13,7 +13,6 @@ import Combine
 final class AuthViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
-    @Published var fullName = ""
 
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -24,7 +23,6 @@ final class AuthViewModel: ObservableObject {
     @Published var currentMembership: CommunityMembership?
     @Published var currentCommunity: Community?
 
-    private let signUpUseCase: SignUpUseCase
     private let signInUseCase: SignInUseCase
     private let signOutUseCase: SignOutUseCase
 
@@ -33,36 +31,17 @@ final class AuthViewModel: ObservableObject {
     private let communityRepository: CommunityRepository
     
     init(
-        signUpUseCase: SignUpUseCase,
         signInUseCase: SignInUseCase,
         signOutUseCase: SignOutUseCase,
         memberRepository: ClubMemberRepository,
         membershipRepository: CommunityMembershipRepository,
         communityRepository: CommunityRepository
     ) {
-        self.signUpUseCase = signUpUseCase
         self.signInUseCase = signInUseCase
         self.signOutUseCase = signOutUseCase
         self.memberRepository = memberRepository
         self.membershipRepository = membershipRepository
         self.communityRepository = communityRepository
-    }
-
-    func signUp() async {
-        isLoading = true
-        errorMessage = nil
-
-        defer { isLoading = false }
-
-        do {
-            currentUserID = try await signUpUseCase.execute(
-                email: email,
-                password: password,
-                fullName: fullName
-            )
-        } catch {
-            errorMessage = error.localizedDescription
-        }
     }
 
     func signIn() async {
@@ -98,7 +77,16 @@ final class AuthViewModel: ObservableObject {
     func signOut() async {
         do {
             try await signOutUseCase.execute()
+
             currentUserID = nil
+            currentMember = nil
+            currentMembership = nil
+            currentCommunity = nil
+
+            email = ""
+            password = ""
+
+            errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
         }

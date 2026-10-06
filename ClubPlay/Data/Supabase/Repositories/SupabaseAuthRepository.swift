@@ -15,23 +15,7 @@ final class SupabaseAuthRepository: AuthRepository {
     init(client: SupabaseClient = SupabaseManager.shared.client) {
         self.client = client
     }
-
-    func signUp(
-        email: String,
-        password: String,
-        fullName: String
-    ) async throws -> UUID {
-        let response = try await client.auth.signUp(
-            email: email,
-            password: password,
-            data: [
-                "full_name": .string(fullName)
-            ]
-        )
-
-        return response.user.id
-    }
-
+    
     func signIn(
         email: String,
         password: String

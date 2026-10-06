@@ -5,7 +5,6 @@
 //  Created by Đức Anh on 5/10/26.
 //
 
-
 import SwiftUI
 
 struct CreateGameView: View {
@@ -15,68 +14,85 @@ struct CreateGameView: View {
     let organiserID: UUID
 
     var body: some View {
-        Form {
-            Section("Game") {
-                TextField("Game name", text: $viewModel.gameName)
-                TextField("Venue", text: $viewModel.venueName)
-
-                Stepper(
-                    "Capacity: \(viewModel.playerCapacity)",
-                    value: $viewModel.playerCapacity,
-                    in: 1...100
-                )
-            }
-
-            Section("Schedule") {
-                DatePicker(
-                    "Kick-off",
-                    selection: $viewModel.kickOffAt
+        ScrollView {
+            VStack(spacing: 20) {
+                GameFormFields(
+                    gameName: $viewModel.gameName,
+                    venueName: $viewModel.venueName,
+                    kickOffAt: $viewModel.kickOffAt,
+                    finishesAt: $viewModel.finishesAt,
+                    playerCapacity: $viewModel.playerCapacity,
+                    registrationOpensAt:
+                        $viewModel.registrationOpensAt,
+                    registrationClosesAt:
+                        $viewModel.registrationClosesAt,
+                    cancellationDeadlineHours:
+                        $viewModel.cancellationDeadlineHours
                 )
 
-                DatePicker(
-                    "Finish",
-                    selection: $viewModel.finishesAt
-                )
-            }
-
-            Section("Registration") {
-                DatePicker(
-                    "Registration opens",
-                    selection: $viewModel.registrationOpensAt
-                )
-
-                DatePicker(
-                    "Registration closes",
-                    selection: $viewModel.registrationClosesAt
-                )
-
-                Stepper(
-                    "Cancel at least \(viewModel.cancellationDeadlineHours) hour(s) before",
-                    value: $viewModel.cancellationDeadlineHours,
-                    in: 0...24
-                )
-            }
-
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-                    .foregroundStyle(.red)
-            }
-
-            if viewModel.didCreateGame {
-                Text("Game created as draft.")
-                    .foregroundStyle(.green)
-            }
-
-            Button("Create Draft Game") {
-                Task {
-                    await viewModel.createGame(
-                        communityID: communityID,
-                        organiserID: organiserID
+                if let errorMessage = viewModel.errorMessage {
+                    messageView(
+                        errorMessage,
+                        color: .red,
+                        icon: "exclamationmark.triangle.fill"
                     )
                 }
+
+                if viewModel.didCreateGame {
+                    messageView(
+                        "Game created as draft.",
+                        color: .green,
+                        icon: "checkmark.circle.fill"
+                    )
+                }
+
+                Button {
+                    Task {
+                        await viewModel.createGame(
+                            communityID: communityID,
+                            organiserID: organiserID
+                        )
+                    }
+                } label: {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Label(
+                            "Create Draft Game",
+                            systemImage: "plus.circle.fill"
+                        )
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(viewModel.isLoading)
             }
-            .disabled(viewModel.isLoading)
+            .padding()
         }
         .navigationTitle("Create Game")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func messageView(
+        _ message: String,
+        color: Color,
+        icon: String
+    ) -> some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundStyle(color)
+
+            Text(message)
+                .font(.subheadline)
+
+            Spacer()
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(color.opacity(0.08))
+        )
     }
 }
