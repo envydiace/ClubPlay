@@ -9,7 +9,6 @@
 import Foundation
 
 enum RegistrationError: Error, Equatable {
-    case memberBanned(until: Date)
     case registrationNotOpen
     case registrationClosed
     case duplicateRegistration
@@ -23,9 +22,6 @@ enum RegistrationError: Error, Equatable {
 extension RegistrationError: LocalizedError {
     var errorDescription: String? {
         switch self {
-        case .memberBanned(let until):
-            return "You are banned from registering for games until \(until.formatted(date: .abbreviated, time: .omitted))."
-
         case .registrationNotOpen:
             return "Registration for this game has not opened yet."
 
