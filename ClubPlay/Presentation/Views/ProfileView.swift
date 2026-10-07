@@ -21,12 +21,6 @@ struct ProfileView: View {
                 header
                 accountCard
                 communityCard
-                Button("Test Notification") {
-                    Task {
-                        try? await NotificationService.shared
-                            .scheduleTestNotification()
-                    }
-                }
                 signOutButton
             }
             .padding()

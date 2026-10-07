@@ -5,18 +5,26 @@
 //  Created by Đức Anh on 7/10/26.
 //
 
-
 import Foundation
 import UserNotifications
+import Combine
 
 enum NotificationCategory {
     static let gameUpdate = "CLUBPLAY_GAME_UPDATE"
 }
 
-final class NotificationService {
+final class NotificationService:
+    NSObject,
+    ObservableObject,
+    UNUserNotificationCenterDelegate {
+
     static let shared = NotificationService()
 
-    private init() {}
+    @Published var openedGameID: UUID?
+
+    private override init() {
+        super.init()
+    }
 
     func configure() {
         let category = UNNotificationCategory(
@@ -26,42 +34,10 @@ final class NotificationService {
             options: []
         )
 
-        UNUserNotificationCenter.current()
-            .setNotificationCategories([category])
-    }
-    
-    func scheduleTestNotification() async throws {
-        let granted = try await requestAuthorization()
+        let center = UNUserNotificationCenter.current()
 
-        guard granted else {
-            return
-        }
-
-        let content = UNMutableNotificationContent()
-        content.title = "Game Updated"
-        content.body = "Sunday Football has a new kick-off time."
-        content.sound = .default
-        content.categoryIdentifier = NotificationCategory.gameUpdate
-
-        content.userInfo = [
-            "gameName": "Sunday Football",
-            "venueName": "Sydney Football Centre",
-            "status": "Updated"
-        ]
-
-        let trigger = UNTimeIntervalNotificationTrigger(
-            timeInterval: 5,
-            repeats: false
-        )
-
-        let request = UNNotificationRequest(
-            identifier: UUID().uuidString,
-            content: content,
-            trigger: trigger
-        )
-
-        try await UNUserNotificationCenter.current()
-            .add(request)
+        center.setNotificationCategories([category])
+        center.delegate = self
     }
 
     func requestAuthorization() async throws -> Bool {
@@ -69,5 +45,41 @@ final class NotificationService {
             .requestAuthorization(
                 options: [.alert, .badge, .sound]
             )
+    }
+
+    // Notification tapped
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler:
+            @escaping () -> Void
+    ) {
+        let userInfo =
+            response.notification.request.content.userInfo
+
+        if
+            let gameIDString = userInfo["gameID"] as? String,
+            let gameID = UUID(uuidString: gameIDString)
+        {
+            DispatchQueue.main.async {
+                self.openedGameID = gameID
+            }
+        }
+
+        completionHandler()
+    }
+
+    // Useful during development:
+    // also show notifications while ClubPlay is foreground
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler:
+            @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([
+            .banner,
+            .sound
+        ])
     }
 }

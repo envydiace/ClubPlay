@@ -17,4 +17,5 @@ protocol AppDependencyProviding {
     var registrationRepository: WeeklyGameRegistrationRepository { get }
     
     var widgetSyncService: WidgetSyncing { get }
+    var notificationRepository: NotificationRepository { get }
 }

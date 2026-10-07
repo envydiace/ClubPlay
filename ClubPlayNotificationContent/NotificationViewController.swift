@@ -27,44 +27,73 @@ final class NotificationViewController:
         gameNameLabel.font = .preferredFont(forTextStyle: .title3)
         venueLabel.font = .preferredFont(forTextStyle: .subheadline)
         statusLabel.font = .preferredFont(forTextStyle: .subheadline)
+
+        venueLabel.textColor = .secondaryLabel
+        statusLabel.numberOfLines = 0
     }
 
-    func didReceive(
-        _ notification: UNNotification
-    ) {
+    func didReceive(_ notification: UNNotification) {
         let content = notification.request.content
         let userInfo = content.userInfo
 
         titleLabel.text = content.title
 
         gameNameLabel.text =
-            userInfo["gameName"] as? String
-            ?? "ClubPlay Game"
+            userInfo["gameName"] as? String ?? "ClubPlay Game"
 
-        venueLabel.text =
-            userInfo["venueName"] as? String
-            ?? "Venue unavailable"
+        var changes: [String] = []
+
+        // MARK: - Venue change
+
+        if
+            let oldVenue =
+                userInfo["previousVenueName"] as? String,
+            let newVenue =
+                userInfo["updatedVenueName"] as? String
+        {
+            venueLabel.text = newVenue
+
+            changes.append(
+                """
+                Venue changed
+                \(oldVenue) → \(newVenue)
+                """
+            )
+        } else {
+            venueLabel.text = nil
+        }
+
+        // MARK: - Kick-off change
+
+        if
+            let previousTimestamp =
+                userInfo["previousKickOffAt"] as? TimeInterval,
+            let updatedTimestamp =
+                userInfo["updatedKickOffAt"] as? TimeInterval
+        {
+            let previousDate =
+                Date(timeIntervalSince1970: previousTimestamp)
+
+            let updatedDate =
+                Date(timeIntervalSince1970: updatedTimestamp)
+
+            changes.append(
+                """
+                Kick-off changed
+                \(format(previousDate)) → \(format(updatedDate))
+                """
+            )
+        }
 
         statusLabel.text =
-            userInfo["status"] as? String
-            ?? "Updated"
-
-        updateStatusAppearance()
+            changes.isEmpty
+            ? "Game details updated"
+            : changes.joined(separator: "\n\n")
     }
 
-    private func updateStatusAppearance() {
-        switch statusLabel.text?.lowercased() {
-        case "confirmed":
-            statusLabel.textColor = .systemGreen
-
-        case "waitlisted":
-            statusLabel.textColor = .systemOrange
-
-        case "cancelled":
-            statusLabel.textColor = .systemRed
-
-        default:
-            statusLabel.textColor = .systemBlue
-        }
+    private func format(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM, h:mm a"
+        return formatter.string(from: date)
     }
 }

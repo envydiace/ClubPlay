@@ -16,6 +16,7 @@ final class PreviewDependencies: AppDependencyProviding {
     let registrationRepository: WeeklyGameRegistrationRepository
     
     let widgetSyncService: WidgetSyncing
+    let notificationRepository: NotificationRepository
 
     init() {
         authRepository = PreviewAuthRepository()
@@ -29,8 +30,8 @@ final class PreviewDependencies: AppDependencyProviding {
         registrationRepository =
             PreviewRegistrationRepository()
         
-        widgetSyncService =
-                PreviewWidgetSyncService()
+        widgetSyncService = PreviewWidgetSyncService()
+        notificationRepository = NoOpNotificationRepository()
     }
     
     

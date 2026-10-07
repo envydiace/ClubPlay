@@ -114,7 +114,7 @@ struct ManageGamesView: View {
                     registrationRepository:
                         dependencies.registrationRepository,
                     notificationRepository:
-                        NoOpNotificationRepository()
+                        dependencies.notificationRepository
                 )
             ),
             organiserID: organiserID

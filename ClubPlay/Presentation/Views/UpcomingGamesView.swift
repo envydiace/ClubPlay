@@ -9,7 +9,9 @@ import SwiftUI
 
 struct UpcomingGamesView: View {
     @StateObject var viewModel: UpcomingGamesViewModel
+    @State private var notificationGame: WeeklyFootballGame?
 
+    let openedGame: WeeklyFootballGame?
     let communityID: UUID
     let memberID: UUID
 
@@ -40,6 +42,25 @@ struct UpcomingGamesView: View {
                 communityID: communityID,
                 memberID: memberID
             )
+        }
+        .onChange(of: openedGame?.id) { _, _ in
+            notificationGame = openedGame
+        }
+        .navigationDestination(
+            isPresented: Binding(
+                get: {
+                    notificationGame != nil
+                },
+                set: { isPresented in
+                    if !isPresented {
+                        notificationGame = nil
+                    }
+                }
+            )
+        ) {
+            if let game = notificationGame {
+                gameDetailDestination(for: game)
+            }
         }
     }
 
