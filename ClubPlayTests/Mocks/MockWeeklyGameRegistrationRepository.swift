@@ -13,6 +13,10 @@ final class MockWeeklyGameRegistrationRepository:
     WeeklyGameRegistrationRepository {
 
     var registrations: [WeeklyGameRegistration] = []
+    
+    var promotedMemberID: UUID?
+    
+    var promoteNextWaitlistedPlayerCalled = false
 
     func fetchRegistration(
         id: UUID
@@ -40,6 +44,13 @@ final class MockWeeklyGameRegistrationRepository:
         forMemberID memberID: UUID
     ) async throws -> [WeeklyGameRegistration] {
         registrations.filter { $0.memberID == memberID }
+    }
+    
+    func promoteNextWaitlistedPlayer(
+        gameID: UUID
+    ) async throws -> UUID? {
+        promoteNextWaitlistedPlayerCalled = true
+        return promotedMemberID
     }
 
     func saveRegistration(
