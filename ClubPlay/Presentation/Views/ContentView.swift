@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selectedTab: Tab = .games
+    @State private var notificationGame: WeeklyFootballGame?
+    @State private var gamesPath: [UUID] = []
+    
     let member: ClubMember
     let membership: CommunityMembership
     let community: Community
@@ -17,22 +21,34 @@ struct ContentView: View {
     let onSignOut: () -> Void
 
     var body: some View {
-        TabView {
-            NavigationStack {
+        TabView(selection: $selectedTab) {
+            NavigationStack(path: $gamesPath) {
                 UpcomingGamesView(
                     viewModel: UpcomingGamesViewModel(
                         gameRepository: dependencies.gameRepository,
                         registrationRepository:
                             dependencies.registrationRepository
                     ),
+                    openedGame: notificationGame,
                     communityID: community.id,
                     memberID: member.id,
                     dependencies: dependencies
                 )
+                .navigationDestination(for: UUID.self) { gameID in
+                    if let game = notificationGame,
+                       game.id == gameID {
+
+                        gameDetailView(for: game)
+
+                    } else {
+                        ProgressView()
+                    }
+                }
             }
             .tabItem {
                 Label("Games", systemImage: "sportscourt")
             }
+            .tag(Tab.games)
 
             NavigationStack {
                 MyRegistrationsView(
@@ -50,6 +66,7 @@ struct ContentView: View {
             .tabItem {
                 Label("My Games", systemImage: "checkmark.circle")
             }
+            .tag(Tab.myGames)
 
             if membership.role == .organiser {
                 NavigationStack {
@@ -70,8 +87,8 @@ struct ContentView: View {
                 .tabItem {
                     Label("Manage", systemImage: "slider.horizontal.3")
                 }
+                .tag(Tab.manage)
             }
-
             NavigationStack {
                 ProfileView(
                     member: member,
@@ -86,7 +103,86 @@ struct ContentView: View {
                     systemImage: "person.circle"
                 )
             }
+            .tag(Tab.profile)
         }
+        .onReceive(
+            NotificationService.shared.$openedGameID
+        ) { gameID in
+
+            guard let gameID else {
+                return
+            }
+
+            Task {
+                guard let game =
+                    try? await dependencies.gameRepository
+                        .fetchGame(id: gameID)
+                else {
+                    return
+                }
+
+                await MainActor.run {
+                    notificationGame = game
+                    selectedTab = .games
+
+                    NotificationService.shared.openedGameID = nil
+                }
+            }
+        }
+    }
+    
+    private enum Tab {
+        case games
+        case myGames
+        case manage
+        case profile
+    }
+    
+    private func gameDetailView(
+        for game: WeeklyFootballGame
+    ) -> some View {
+        let gameRepository =
+            dependencies.gameRepository
+
+        let registrationRepository =
+            dependencies.registrationRepository
+
+        let promoteUseCase =
+            PromoteWaitlistedPlayerUseCase(
+                registrationRepository:
+                    registrationRepository
+            )
+
+        let cancelUseCase =
+            CancelGameRegistrationUseCase(
+                gameRepository: gameRepository,
+                registrationRepository:
+                    registrationRepository,
+                promoteWaitlistedPlayerUseCase:
+                    promoteUseCase
+            )
+
+        let registerUseCase =
+            RegisterForGameUseCase(
+                gameRepository: gameRepository,
+                registrationRepository:
+                    registrationRepository
+            )
+
+        return GameDetailView(
+            game: game,
+            memberID: member.id,
+            viewModel: GameDetailViewModel(
+                registerForGameUseCase:
+                    registerUseCase,
+                cancelGameRegistrationUseCase:
+                    cancelUseCase,
+                registrationRepository:
+                    registrationRepository,
+                widgetSyncService:
+                    dependencies.widgetSyncService
+            )
+        )
     }
 }
 

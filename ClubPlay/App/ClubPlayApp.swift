@@ -9,6 +9,11 @@ import SwiftUI
 
 @main
 struct ClubPlayApp: App {
+    
+    init() {
+        NotificationService.shared.configure()
+    }
+    
     var body: some Scene {
         WindowGroup {
             let dependencies = AppDependencies.shared

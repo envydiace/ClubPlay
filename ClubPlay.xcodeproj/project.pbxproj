@@ -10,6 +10,9 @@
 		57515D62307528C000DDDE63 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57515D61307528C000DDDE63 /* WidgetKit.framework */; };
 		57515D64307528C000DDDE63 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57515D63307528C000DDDE63 /* SwiftUI.framework */; };
 		57515D6F307528C100DDDE63 /* ClubPlayWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 57515D60307528BF00DDDE63 /* ClubPlayWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		57515FA730754ACD00DDDE63 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57515FA630754ACD00DDDE63 /* UserNotifications.framework */; };
+		57515FA930754ACD00DDDE63 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57515FA830754ACD00DDDE63 /* UserNotificationsUI.framework */; };
+		57515FB330754ACE00DDDE63 /* ClubPlayNotificationContent.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 57515FA530754ACD00DDDE63 /* ClubPlayNotificationContent.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		5794D7B03073880B00C3705E /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 5794D7AF3073880B00C3705E /* Auth */; };
 		5794D7B23073880B00C3705E /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 5794D7B13073880B00C3705E /* PostgREST */; };
 		5794D7B43073880B00C3705E /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 5794D7B33073880B00C3705E /* Realtime */; };
@@ -23,6 +26,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 57515D5F307528BF00DDDE63;
 			remoteInfo = ClubPlayWidgetExtension;
+		};
+		57515FB130754ACE00DDDE63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 57D995813068C29100CC7C16 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 57515FA430754ACD00DDDE63;
+			remoteInfo = ClubPlayNotificationContent;
 		};
 		57D995973068C29300CC7C16 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -48,6 +58,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				57515D6F307528C100DDDE63 /* ClubPlayWidgetExtension.appex in Embed Foundation Extensions */,
+				57515FB330754ACE00DDDE63 /* ClubPlayNotificationContent.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -59,6 +70,9 @@
 		57515D61307528C000DDDE63 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		57515D63307528C000DDDE63 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		57515D76307529CD00DDDE63 /* ClubPlayWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClubPlayWidgetExtension.entitlements; sourceTree = "<group>"; };
+		57515FA530754ACD00DDDE63 /* ClubPlayNotificationContent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClubPlayNotificationContent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		57515FA630754ACD00DDDE63 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		57515FA830754ACD00DDDE63 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
 		57D995893068C29100CC7C16 /* ClubPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClubPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57D995963068C29300CC7C16 /* ClubPlayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClubPlayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		57D995A03068C29300CC7C16 /* ClubPlayUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClubPlayUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +95,13 @@
 			);
 			target = 57515D5F307528BF00DDDE63 /* ClubPlayWidgetExtension */;
 		};
+		57515FB430754ACE00DDDE63 /* Exceptions for "ClubPlayNotificationContent" folder in "ClubPlayNotificationContent" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 57515FA430754ACD00DDDE63 /* ClubPlayNotificationContent */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -90,6 +111,14 @@
 				57515D70307528C100DDDE63 /* Exceptions for "ClubPlayWidget" folder in "ClubPlayWidgetExtension" target */,
 			);
 			path = ClubPlayWidget;
+			sourceTree = "<group>";
+		};
+		57515FAA30754ACD00DDDE63 /* ClubPlayNotificationContent */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				57515FB430754ACE00DDDE63 /* Exceptions for "ClubPlayNotificationContent" folder in "ClubPlayNotificationContent" target */,
+			);
+			path = ClubPlayNotificationContent;
 			sourceTree = "<group>";
 		};
 		57D9958B3068C29100CC7C16 /* ClubPlay */ = {
@@ -119,6 +148,15 @@
 			files = (
 				57515D64307528C000DDDE63 /* SwiftUI.framework in Frameworks */,
 				57515D62307528C000DDDE63 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		57515FA230754ACD00DDDE63 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				57515FA930754ACD00DDDE63 /* UserNotificationsUI.framework in Frameworks */,
+				57515FA730754ACD00DDDE63 /* UserNotifications.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +193,8 @@
 			children = (
 				57515D61307528C000DDDE63 /* WidgetKit.framework */,
 				57515D63307528C000DDDE63 /* SwiftUI.framework */,
+				57515FA630754ACD00DDDE63 /* UserNotifications.framework */,
+				57515FA830754ACD00DDDE63 /* UserNotificationsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -167,6 +207,7 @@
 				57D995993068C29300CC7C16 /* ClubPlayTests */,
 				57D995A33068C29300CC7C16 /* ClubPlayUITests */,
 				57515D65307528C000DDDE63 /* ClubPlayWidget */,
+				57515FAA30754ACD00DDDE63 /* ClubPlayNotificationContent */,
 				5794D7B83073893700C3705E /* Frameworks */,
 				57D9958A3068C29100CC7C16 /* Products */,
 			);
@@ -179,6 +220,7 @@
 				57D995963068C29300CC7C16 /* ClubPlayTests.xctest */,
 				57D995A03068C29300CC7C16 /* ClubPlayUITests.xctest */,
 				57515D60307528BF00DDDE63 /* ClubPlayWidgetExtension.appex */,
+				57515FA530754ACD00DDDE63 /* ClubPlayNotificationContent.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -208,6 +250,28 @@
 			productReference = 57515D60307528BF00DDDE63 /* ClubPlayWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		57515FA430754ACD00DDDE63 /* ClubPlayNotificationContent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 57515FB530754ACE00DDDE63 /* Build configuration list for PBXNativeTarget "ClubPlayNotificationContent" */;
+			buildPhases = (
+				57515FA130754ACD00DDDE63 /* Sources */,
+				57515FA230754ACD00DDDE63 /* Frameworks */,
+				57515FA330754ACD00DDDE63 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				57515FAA30754ACD00DDDE63 /* ClubPlayNotificationContent */,
+			);
+			name = ClubPlayNotificationContent;
+			packageProductDependencies = (
+			);
+			productName = ClubPlayNotificationContent;
+			productReference = 57515FA530754ACD00DDDE63 /* ClubPlayNotificationContent.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		57D995883068C29100CC7C16 /* ClubPlay */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 57D995AA3068C29300CC7C16 /* Build configuration list for PBXNativeTarget "ClubPlay" */;
@@ -221,6 +285,7 @@
 			);
 			dependencies = (
 				57515D6E307528C100DDDE63 /* PBXTargetDependency */,
+				57515FB230754ACE00DDDE63 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				57D9958B3068C29100CC7C16 /* ClubPlay */,
@@ -295,6 +360,9 @@
 					57515D5F307528BF00DDDE63 = {
 						CreatedOnToolsVersion = 26.2;
 					};
+					57515FA430754ACD00DDDE63 = {
+						CreatedOnToolsVersion = 26.2;
+					};
 					57D995883068C29100CC7C16 = {
 						CreatedOnToolsVersion = 26.2;
 					};
@@ -329,12 +397,20 @@
 				57D995953068C29300CC7C16 /* ClubPlayTests */,
 				57D9959F3068C29300CC7C16 /* ClubPlayUITests */,
 				57515D5F307528BF00DDDE63 /* ClubPlayWidgetExtension */,
+				57515FA430754ACD00DDDE63 /* ClubPlayNotificationContent */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		57515D5E307528BF00DDDE63 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		57515FA330754ACD00DDDE63 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -372,6 +448,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		57515FA130754ACD00DDDE63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		57D995853068C29100CC7C16 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -401,6 +484,11 @@
 			target = 57515D5F307528BF00DDDE63 /* ClubPlayWidgetExtension */;
 			targetProxy = 57515D6D307528C100DDDE63 /* PBXContainerItemProxy */;
 		};
+		57515FB230754ACE00DDDE63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 57515FA430754ACD00DDDE63 /* ClubPlayNotificationContent */;
+			targetProxy = 57515FB130754ACE00DDDE63 /* PBXContainerItemProxy */;
+		};
 		57D995983068C29300CC7C16 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 57D995883068C29100CC7C16 /* ClubPlay */;
@@ -427,6 +515,7 @@
 				INFOPLIST_FILE = ClubPlayWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ClubPlayWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -458,6 +547,7 @@
 				INFOPLIST_FILE = ClubPlayWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ClubPlayWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -465,6 +555,64 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.ducanhninh.ClubPlay.ClubPlayWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		57515FB630754ACE00DDDE63 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D47S596NBF;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClubPlayNotificationContent/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClubPlayNotificationContent;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.ducanhninh.ClubPlay.ClubPlayNotificationContent;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		57515FB730754ACE00DDDE63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D47S596NBF;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClubPlayNotificationContent/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ClubPlayNotificationContent;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.personal.ducanhninh.ClubPlay.ClubPlayNotificationContent;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -613,6 +761,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -646,6 +795,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -671,7 +821,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = D47S596NBF;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.ducanhninh.ClubPlayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -693,7 +843,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = D47S596NBF;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.ducanhninh.ClubPlayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -714,6 +864,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = D47S596NBF;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.ducanhninh.ClubPlayUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -734,6 +885,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = D47S596NBF;
 				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.personal.ducanhninh.ClubPlayUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -755,6 +907,15 @@
 			buildConfigurations = (
 				57515D72307528C100DDDE63 /* Debug */,
 				57515D73307528C100DDDE63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		57515FB530754ACE00DDDE63 /* Build configuration list for PBXNativeTarget "ClubPlayNotificationContent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				57515FB630754ACE00DDDE63 /* Debug */,
+				57515FB730754ACE00DDDE63 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

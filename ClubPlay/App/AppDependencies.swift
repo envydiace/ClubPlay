@@ -13,6 +13,7 @@ final class AppDependencies: AppDependencyProviding {
     static let shared = AppDependencies()
     
     let widgetSyncService: WidgetSyncing
+    let notificationRepository: NotificationRepository
 
     // MARK: - Remote repositories
 
@@ -133,6 +134,8 @@ final class AppDependencies: AppDependencyProviding {
             gameRepository: gameRepository,
             registrationRepository: registrationRepository
         )
+        
+        notificationRepository = LocalNotificationRepository()
 
         authRepository =
             SupabaseAuthRepository()
