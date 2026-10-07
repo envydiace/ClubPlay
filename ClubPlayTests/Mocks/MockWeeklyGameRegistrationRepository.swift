@@ -15,6 +15,7 @@ final class MockWeeklyGameRegistrationRepository:
     var registrations: [WeeklyGameRegistration] = []
     
     var promotedMemberID: UUID?
+    var promotedGameID: UUID?
     
     var promoteNextWaitlistedPlayerCalled = false
 
@@ -50,6 +51,7 @@ final class MockWeeklyGameRegistrationRepository:
         gameID: UUID
     ) async throws -> UUID? {
         promoteNextWaitlistedPlayerCalled = true
+        promotedGameID = gameID
         return promotedMemberID
     }
 
