@@ -74,64 +74,57 @@ struct EditGameUseCase {
         try await gameRepository.updateGame(game)
         
         if existingGame.status == .published {
+
+            let kickOffChanged =
+                existingGame.kickOffAt != game.kickOffAt
+
+            let venueChanged =
+                existingGame.venueName != game.venueName
+
+            let meaningfulChange =
+                kickOffChanged || venueChanged
+
+            guard meaningfulChange else {
+                return
+            }
+
             let registrations =
                 try await registrationRepository.fetchRegistrations(
                     forGameID: game.id
                 )
 
-            if existingGame.status == .published {
-
-                let kickOffChanged =
-                    existingGame.kickOffAt != game.kickOffAt
-
-                let venueChanged =
-                    existingGame.venueName != game.venueName
-
-                let meaningfulChange =
-                    kickOffChanged || venueChanged
-
-                guard meaningfulChange else {
-                    return
+            let recipientIDs = registrations
+                .filter {
+                    $0.registrationStatus == .confirmed ||
+                    $0.registrationStatus == .waitlisted
                 }
+                .map(\.memberID)
 
-                let registrations =
-                    try await registrationRepository.fetchRegistrations(
-                        forGameID: game.id
-                    )
+            if !recipientIDs.isEmpty {
 
-                let recipientIDs = registrations
-                    .filter {
-                        $0.registrationStatus == .confirmed ||
-                        $0.registrationStatus == .waitlisted
-                    }
-                    .map(\.memberID)
+                let notification = ClubNotification(
+                    recipientMemberIDs: recipientIDs,
+                    type: .gameUpdated,
+                    title: "Game Updated",
+                    message: "\(game.gameName) has changed. Review the new details.",
+                    relatedGameID: game.id,
 
-                if !recipientIDs.isEmpty {
+                    gameName: game.gameName,
 
-                    let notification = ClubNotification(
-                        recipientMemberIDs: recipientIDs,
-                        type: .gameUpdated,
-                        title: "Game Updated",
-                        message: "\(game.gameName) has changed. Review the new details.",
-                        relatedGameID: game.id,
+                    previousVenueName:
+                        venueChanged ? existingGame.venueName : nil,
 
-                        gameName: game.gameName,
+                    updatedVenueName:
+                        venueChanged ? game.venueName : nil,
 
-                        previousVenueName:
-                            venueChanged ? existingGame.venueName : nil,
+                    previousKickOffAt:
+                        kickOffChanged ? existingGame.kickOffAt : nil,
 
-                        updatedVenueName:
-                            venueChanged ? game.venueName : nil,
+                    updatedKickOffAt:
+                        kickOffChanged ? game.kickOffAt : nil
+                )
 
-                        previousKickOffAt:
-                            kickOffChanged ? existingGame.kickOffAt : nil,
-
-                        updatedKickOffAt:
-                            kickOffChanged ? game.kickOffAt : nil
-                    )
-
-                    try await notificationRepository.send(notification)
-                }
+                try await notificationRepository.send(notification)
             }
         }
     }
