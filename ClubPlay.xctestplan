@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "99ED9478-E5B0-4C2C-939F-8E79A084B9C1",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:ClubPlay.xcodeproj",
+      "identifier" : "57D995953068C29300CC7C16",
+      "name" : "ClubPlayTests"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:ClubPlay.xcodeproj",
+        "identifier" : "57D995953068C29300CC7C16",
+        "name" : "ClubPlayTests"
+      }
+    }
+  ],
+  "version" : 1
+}

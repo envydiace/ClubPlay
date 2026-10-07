@@ -66,6 +66,7 @@
 		57515FA530754ACD00DDDE63 /* ClubPlayNotificationContent.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ClubPlayNotificationContent.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		57515FA630754ACD00DDDE63 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		57515FA830754ACD00DDDE63 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		575161FC3076689F00DDDE63 /* ClubPlay.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = ClubPlay.xctestplan; sourceTree = "<group>"; };
 		57D995893068C29100CC7C16 /* ClubPlay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClubPlay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57D995963068C29300CC7C16 /* ClubPlayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClubPlayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -182,6 +183,7 @@
 		57D995803068C29100CC7C16 = {
 			isa = PBXGroup;
 			children = (
+				575161FC3076689F00DDDE63 /* ClubPlay.xctestplan */,
 				57515D76307529CD00DDDE63 /* ClubPlayWidgetExtension.entitlements */,
 				57D9958B3068C29100CC7C16 /* ClubPlay */,
 				57D995993068C29300CC7C16 /* ClubPlayTests */,
